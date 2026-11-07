@@ -1,25 +1,24 @@
-import os
-from pathlib import Path
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import documents, health, lessons, qa, voice
+from app.config import get_settings
+from app.errors import register_error_handlers
 
-ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = Path(os.getenv("DATA_DIR", ROOT / "backend" / "data"))
-DATA_DIR.mkdir(parents=True, exist_ok=True)
+_settings = get_settings()
+_settings.data_dir.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="GreatUniHack Lesson API", version="0.1.0")
 
-origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in origins],
+    allow_origins=list(_settings.cors_origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+register_error_handlers(app)
 
 app.include_router(health.router)
 app.include_router(documents.router)

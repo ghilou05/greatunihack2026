@@ -211,6 +211,8 @@ greatunihack2026/
 
 **Scaffold status:** `shared/`, `backend/`, and `frontend/` exist with stubs. Demo IDs: `doc_demo`, `les_demo`. Backend returns fixtures until P2 implements real ingest/LLM.
 
+**P2:** [p2-solution-design.md](./p2-solution-design.md) (approved) · [p2-implementation-plan.md](./p2-implementation-plan.md)
+
 ---
 
 ## 5. The four contracts (agree before coding)

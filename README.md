@@ -19,10 +19,32 @@ PDF voice lesson MVP.
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-uvicorn app.main:app --reload --app-dir . --port 8000
+pip install -r requirements-dev.txt
+cp .env.example .env   # set OPENAI_API_KEY for live lesson/Q&A
 ```
+
+Run the API with **one worker** (per-document locks assume a single process):
+
+```bash
+uvicorn app.main:app --port 8000 --app-dir .
+```
+
+Tests (offline, no API key required):
+
+```bash
+.venv/bin/python -m pytest -q
+```
+
+LLM smoke / golden fixture (needs `OPENAI_API_KEY` in `backend/.env`):
+
+```bash
+.venv/bin/python -m app.services.llm --ping
+.venv/bin/python -m app.services.lesson_generator ../shared/fixtures/golden-demo.pdf --runs 5
+```
+
+**P1:** set lesson `POST` fetch timeout ≥ 90s; show `detail` on 4xx/5xx; retries on 502/504 are safe (idempotent).
+
+**P3:** send `narration_delivered` and `qa_turns`; always play `bridge`, then re-apply segment `on_enter`.
 
 API smoke test:
 
