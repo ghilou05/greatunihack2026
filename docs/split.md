@@ -33,3 +33,7 @@ Display the text being narrated as a transcript
 Handle interruptions when the user asks a question
 Coordinate narration with PDF navigation events
 Deliverable: A lesson player that speaks AI-generated text and accepts spoken questions.
+
+---
+
+**File-level ownership:** see [team-mvp-integration-plan.md](./team-mvp-integration-plan.md) §3.

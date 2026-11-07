@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson-state.json",
+  "title": "LessonState",
+  "type": "object",
+  "required": ["lesson_id", "status", "segment_id", "segment_index", "open_loops"],
+  "properties": {
+    "lesson_id": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["idle", "teaching", "paused", "answering", "complete"]
+    },
+    "segment_id": { "type": ["string", "null"] },
+    "segment_index": { "type": "integer", "minimum": 0 },
+    "open_loops": { "type": "array", "items": { "type": "string" } },
+    "interrupt": {
+      "type": ["object", "null"],
+      "properties": {
+        "question": { "type": "string" },
+        "at_segment_id": { "type": "string" }
+      }
+    }
+  }
+}

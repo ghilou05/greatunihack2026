@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "qa.json",
+  "title": "QA",
+  "oneOf": [
+    {
+      "title": "QARequest",
+      "type": "object",
+      "required": ["lesson_id", "segment_id", "question"],
+      "properties": {
+        "lesson_id": { "type": "string" },
+        "segment_id": { "type": "string" },
+        "question": { "type": "string" },
+        "max_cite_spans": { "type": "integer", "minimum": 1, "default": 5 }
+      }
+    },
+    {
+      "title": "QAResponse",
+      "type": "object",
+      "required": ["answer", "cite_span_ids", "viewer_commands"],
+      "properties": {
+        "answer": { "type": "string" },
+        "cite_span_ids": { "type": "array", "items": { "type": "string" } },
+        "viewer_commands": {
+          "type": "array",
+          "items": { "$ref": "viewer-commands.json" }
+        },
+        "bridge": { "type": ["string", "null"] }
+      }
+    }
+  ]
+}

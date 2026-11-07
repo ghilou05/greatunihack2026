@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson-plan.json",
+  "title": "LessonPlan",
+  "type": "object",
+  "required": ["lesson_id", "document_id", "title", "segments"],
+  "properties": {
+    "lesson_id": { "type": "string" },
+    "document_id": { "type": "string" },
+    "title": { "type": "string" },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "goal", "span_ids", "narration", "on_enter", "next"],
+        "properties": {
+          "id": { "type": "string" },
+          "goal": { "type": "string" },
+          "span_ids": { "type": "array", "items": { "type": "string" } },
+          "narration": { "type": "string" },
+          "on_enter": { "$ref": "#/$defs/segmentOnEnter" },
+          "check_question": { "type": ["string", "null"] },
+          "next": { "type": ["string", "null"] }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "segmentOnEnter": {
+      "type": "object",
+      "required": ["scroll_to_span", "highlights"],
+      "properties": {
+        "scroll_to_span": { "type": "string" },
+        "highlights": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
