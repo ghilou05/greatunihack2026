@@ -43,3 +43,30 @@ export function segmentOnEnterCommands(
 export function lookupSpan(index: DocumentIndex, spanId: string): Span | undefined {
   return index.spans.find((s) => s.span_id === spanId);
 }
+
+/** Unknown span_id → scroll_to_page for that unit's page (or first segment page). */
+export function normalizeViewerCommands(
+  commands: ViewerCommand[],
+  index: DocumentIndex | null
+): ViewerCommand[] {
+  if (!index) return commands;
+  const out: ViewerCommand[] = [];
+  for (const cmd of commands) {
+    if (cmd.type === "scroll_to_span") {
+      const unit = lookupSpan(index, cmd.span_id);
+      if (unit) {
+        out.push(cmd);
+      } else {
+        out.push({ type: "scroll_to_page", page: 1 });
+      }
+      continue;
+    }
+    if (cmd.type === "set_highlights") {
+      const valid = cmd.span_ids.filter((id) => lookupSpan(index, id));
+      if (valid.length) out.push({ type: "set_highlights", span_ids: valid });
+      continue;
+    }
+    out.push(cmd);
+  }
+  return out;
+}

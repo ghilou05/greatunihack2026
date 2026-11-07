@@ -12,14 +12,22 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "goal", "span_ids", "narration", "on_enter", "next"],
+        "required": ["id", "goal", "span_ids", "narration", "on_enter", "cues", "next"],
         "properties": {
           "id": { "type": "string" },
           "goal": { "type": "string" },
           "span_ids": { "type": "array", "items": { "type": "string" } },
           "narration": { "type": "string" },
           "on_enter": { "$ref": "#/$defs/segmentOnEnter" },
-          "check_question": { "type": ["string", "null"] },
+          "cues": {
+            "type": "array",
+            "description": "MVP: []. Future: timed viewer commands via TTS timestamps",
+            "items": { "$ref": "#/$defs/segmentCue" }
+          },
+          "check_question": {
+            "type": ["string", "null"],
+            "description": "Post-MVP micro-check; ignore in hackathon player"
+          },
           "next": { "type": ["string", "null"] }
         }
       }
@@ -32,6 +40,17 @@
       "properties": {
         "scroll_to_span": { "type": "string" },
         "highlights": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "segmentCue": {
+      "type": "object",
+      "required": ["at_ms", "commands"],
+      "properties": {
+        "at_ms": { "type": "integer", "minimum": 0 },
+        "commands": {
+          "type": "array",
+          "items": { "$ref": "viewer-commands.json" }
+        }
       }
     }
   }

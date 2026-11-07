@@ -12,7 +12,6 @@ export function useLessonSession(lessonId: string) {
     status: "idle",
     segment_id: null,
     segment_index: 0,
-    open_loops: [],
     interrupt: null,
   });
 

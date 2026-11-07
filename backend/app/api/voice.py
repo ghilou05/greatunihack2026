@@ -1,4 +1,5 @@
-"""P3: ElevenLabs helpers and lesson runtime (stubs)."""
+"""P3: Optional ElevenLabs proxy only — lesson runtime stays in the browser."""
+
 
 from fastapi import APIRouter
 

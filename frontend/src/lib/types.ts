@@ -4,6 +4,7 @@ export type BBox = { x0: number; y0: number; x1: number; y1: number };
 
 export type Span = {
   span_id: string;
+  unit_kind: "line";
   page: number;
   text: string;
   bbox: BBox;
@@ -15,13 +16,19 @@ export type DocumentIndex = {
   spans: Span[];
 };
 
+export type SegmentCue = {
+  at_ms: number;
+  commands: ViewerCommand[];
+};
+
 export type LessonSegment = {
   id: string;
   goal: string;
   span_ids: string[];
   narration: string;
   on_enter: { scroll_to_span: string; highlights: string[] };
-  check_question: string | null;
+  cues: SegmentCue[];
+  check_question?: string | null;
   next: string | null;
 };
 
@@ -50,8 +57,11 @@ export type LessonState = {
   status: LessonStateStatus;
   segment_id: string | null;
   segment_index: number;
-  open_loops: string[];
-  interrupt: { question: string; at_segment_id: string } | null;
+  interrupt: {
+    at_segment_id: string;
+    narration_offset_ms: number;
+    narration_delivered: string;
+  } | null;
 };
 
 export type QAResponse = {
@@ -61,9 +71,14 @@ export type QAResponse = {
   bridge?: string | null;
 };
 
+export type QATurn = { question: string; answer: string };
+
 export type QARequest = {
   lesson_id: string;
   segment_id: string;
   question: string;
+  playback_ms?: number;
+  narration_delivered?: string;
+  qa_turns?: QATurn[];
   max_cite_spans?: number;
 };

@@ -3,7 +3,8 @@
   "$id": "lesson-state.json",
   "title": "LessonState",
   "type": "object",
-  "required": ["lesson_id", "status", "segment_id", "segment_index", "open_loops"],
+  "required": ["lesson_id", "status", "segment_id", "segment_index"],
+  "description": "Frontend-only runtime state (not persisted on server in MVP)",
   "properties": {
     "lesson_id": { "type": "string" },
     "status": {
@@ -12,12 +13,12 @@
     },
     "segment_id": { "type": ["string", "null"] },
     "segment_index": { "type": "integer", "minimum": 0 },
-    "open_loops": { "type": "array", "items": { "type": "string" } },
     "interrupt": {
       "type": ["object", "null"],
       "properties": {
-        "question": { "type": "string" },
-        "at_segment_id": { "type": "string" }
+        "at_segment_id": { "type": "string" },
+        "narration_offset_ms": { "type": "integer", "minimum": 0 },
+        "narration_delivered": { "type": "string" }
       }
     }
   }

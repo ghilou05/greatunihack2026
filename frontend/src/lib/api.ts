@@ -18,6 +18,12 @@ export async function getDocument(documentId: string): Promise<{
   return res.json();
 }
 
+export async function getDocumentIndex(documentId: string): Promise<DocumentIndex> {
+  const res = await fetch(`${API}/documents/${documentId}/index`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
 export async function getLesson(lessonId: string): Promise<LessonPlan> {
   const res = await fetch(`${API}/lessons/${lessonId}`);
   if (!res.ok) throw new Error(await res.text());

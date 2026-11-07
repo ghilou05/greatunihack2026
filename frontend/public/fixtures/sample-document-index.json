@@ -6,19 +6,22 @@
   ],
   "spans": [
     {
-      "span_id": "p1_s0",
+      "span_id": "p1_l0",
+      "unit_kind": "line",
       "page": 1,
       "text": "Osmosis is the net movement of water across a selectively permeable membrane.",
       "bbox": { "x0": 72, "y0": 120, "x1": 520, "y1": 136 }
     },
     {
-      "span_id": "p1_s1",
+      "span_id": "p1_l1",
+      "unit_kind": "line",
       "page": 1,
       "text": "Water moves from a region of lower solute concentration to higher solute concentration.",
       "bbox": { "x0": 72, "y0": 150, "x1": 540, "y1": 166 }
     },
     {
-      "span_id": "p2_s0",
+      "span_id": "p2_l0",
+      "unit_kind": "line",
       "page": 2,
       "text": "In plant cells, osmosis affects turgor pressure and cell shape.",
       "bbox": { "x0": 72, "y0": 100, "x1": 480, "y1": 116 }

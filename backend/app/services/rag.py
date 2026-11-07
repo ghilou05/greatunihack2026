@@ -7,11 +7,14 @@ from app.models.schemas import QARequest, QAResponse, ScrollToSpan, SetHighlight
 from app.storage.local import FIXTURES
 
 
-def answer_question(_request: QARequest, *, use_fixture: bool = True) -> QAResponse:
+def answer_question(request: QARequest, *, use_fixture: bool = True) -> QAResponse:
     if use_fixture:
         raw = json.loads((FIXTURES / "sample-qa-response.json").read_text())
         return QAResponse.model_validate(raw)
 
+    _ = request.playback_ms
+    _ = request.narration_delivered
+    _ = request.qa_turns
     raise NotImplementedError("Implement RAG + LLM answer with mandatory cite_span_ids")
 
 

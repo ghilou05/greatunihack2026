@@ -1,9 +1,9 @@
 {
   "answer": "Water moves toward the side with higher solute concentration because the membrane is selective.",
-  "cite_span_ids": ["p1_s1"],
+  "cite_span_ids": ["p1_l1"],
   "viewer_commands": [
-    { "type": "scroll_to_span", "span_id": "p1_s1" },
-    { "type": "set_highlights", "span_ids": ["p1_s1"] }
+    { "type": "scroll_to_span", "span_id": "p1_l1" },
+    { "type": "set_highlights", "span_ids": ["p1_l1"] }
   ],
   "bridge": "Let's pick up where we left off with osmosis."
 }

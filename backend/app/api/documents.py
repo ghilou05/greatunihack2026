@@ -56,3 +56,11 @@ def get_document(document_id: str) -> DocumentStatus:
 
     index = DocumentIndex.model_validate(json.loads(index_path.read_text()))
     return DocumentStatus(document_id=document_id, status=IngestStatus.ready, index=index)
+
+
+@router.get("/{document_id}/index", response_model=DocumentIndex)
+def get_document_index(document_id: str) -> DocumentIndex:
+    status = get_document(document_id)
+    if status.index is None:
+        raise HTTPException(status_code=404, detail="Index not ready")
+    return status.index
