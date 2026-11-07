@@ -7,27 +7,46 @@ export type ViewerHandlers = {
   clearHighlights: () => void;
 };
 
-/** P1: Apply commands from P3 (and Q&A responses) to the PDF viewer. */
+/** Span lookup that normalization needs; `PdfViewer` provides it alongside `ViewerHandlers`. */
+export type SpanLookup = {
+  hasSpan: (spanId: string) => boolean;
+};
+
+/**
+ * P1: Apply commands from P3 (and Q&A responses) to the PDF viewer.
+ * Pass `segment.page` as `fallbackPage`. Never throws: problems are logged as warnings.
+ */
 export function executeCommands(
   commands: ViewerCommand[],
-  handlers: ViewerHandlers
+  handlers: ViewerHandlers & SpanLookup,
+  fallbackPage: number
 ): void {
-  for (const cmd of commands) {
-    switch (cmd.type) {
-      case "scroll_to_span":
-        handlers.scrollToSpan(cmd.span_id);
-        break;
-      case "scroll_to_page":
-        handlers.scrollToPage(cmd.page);
-        break;
-      case "set_highlights":
-        handlers.setHighlights(cmd.span_ids);
-        break;
-      case "clear_highlights":
-        handlers.clearHighlights();
-        break;
-      default:
-        break;
+  let normalized: ViewerCommand[];
+  try {
+    normalized = normalizeViewerCommands(commands, handlers, fallbackPage);
+  } catch (err) {
+    console.warn("[viewer-commands] could not normalize commands", err);
+    return;
+  }
+
+  for (const cmd of normalized) {
+    try {
+      switch (cmd.type) {
+        case "scroll_to_span":
+          handlers.scrollToSpan(cmd.span_id);
+          break;
+        case "scroll_to_page":
+          handlers.scrollToPage(cmd.page);
+          break;
+        case "set_highlights":
+          handlers.setHighlights(cmd.span_ids);
+          break;
+        case "clear_highlights":
+          handlers.clearHighlights();
+          break;
+      }
+    } catch (err) {
+      console.warn(`[viewer-commands] handler failed for ${cmd.type}`, err);
     }
   }
 }
@@ -52,30 +71,69 @@ export function lookupSpan(index: DocumentIndex, spanId: string): Span | undefin
   return index.spans.find((s) => s.span_id === spanId);
 }
 
-/** Unknown span_id → scroll_to_page for that unit's page (or first segment page). */
+/**
+ * Drop span ids the viewer doesn't know (exact match only) and malformed commands.
+ * - Unknown `scroll_to_span` → `scroll_to_page(fallbackPage)`.
+ * - `set_highlights` stays even when empty, so stale highlights are still replaced.
+ * - Empty `set_highlights` with no scroll anywhere in the list → append `scroll_to_page(fallbackPage)`.
+ */
 export function normalizeViewerCommands(
   commands: ViewerCommand[],
-  index: DocumentIndex | null,
-  fallbackPage = 1
+  handlers: SpanLookup,
+  fallbackPage: number
 ): ViewerCommand[] {
-  if (!index) return commands;
+  if (!Array.isArray(commands)) {
+    console.warn("[viewer-commands] expected a command list, got", commands);
+    return [];
+  }
+
+  const isKnownSpan = (id: unknown): id is string =>
+    typeof id === "string" && handlers.hasSpan(id);
+
   const out: ViewerCommand[] = [];
+  let scrolled = false;
+  let highlightsEmptied = false;
+
   for (const cmd of commands) {
-    if (cmd.type === "scroll_to_span") {
-      const unit = lookupSpan(index, cmd.span_id);
-      if (unit) {
-        out.push(cmd);
-      } else {
-        out.push({ type: "scroll_to_page", page: fallbackPage });
+    switch (cmd?.type) {
+      case "scroll_to_span":
+        scrolled = true;
+        if (isKnownSpan(cmd.span_id)) {
+          out.push(cmd);
+        } else {
+          console.warn(`[viewer-commands] unknown scroll span: ${cmd.span_id}`);
+          out.push({ type: "scroll_to_page", page: fallbackPage });
+        }
+        break;
+      case "scroll_to_page":
+        scrolled = true;
+        if (Number.isInteger(cmd.page) && cmd.page >= 1) {
+          out.push(cmd);
+        } else {
+          console.warn(`[viewer-commands] invalid page: ${cmd.page}`);
+          out.push({ type: "scroll_to_page", page: fallbackPage });
+        }
+        break;
+      case "set_highlights": {
+        const requested: unknown[] = Array.isArray(cmd.span_ids) ? cmd.span_ids : [];
+        const known = requested.filter(isKnownSpan);
+        if (known.length !== requested.length || !Array.isArray(cmd.span_ids)) {
+          console.warn("[viewer-commands] dropped unknown highlight spans", cmd.span_ids);
+        }
+        if (known.length === 0) highlightsEmptied = true;
+        out.push({ type: "set_highlights", span_ids: known });
+        break;
       }
-      continue;
+      case "clear_highlights":
+        out.push(cmd);
+        break;
+      default:
+        console.warn("[viewer-commands] dropped malformed command", cmd);
     }
-    if (cmd.type === "set_highlights") {
-      const valid = cmd.span_ids.filter((id) => lookupSpan(index, id));
-      out.push({ type: "set_highlights", span_ids: valid });
-      continue;
-    }
-    out.push(cmd);
+  }
+
+  if (highlightsEmptied && !scrolled) {
+    out.push({ type: "scroll_to_page", page: fallbackPage });
   }
   return out;
 }

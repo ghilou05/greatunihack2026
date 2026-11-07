@@ -1,0 +1,57 @@
+.container {
+  position: relative;
+  height: 100%;
+  padding: 12px;
+  overflow-y: auto;
+  /* Stops the scrollbar appearing from changing the page width. */
+  scrollbar-gutter: stable;
+  background: var(--bg);
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.page {
+  position: relative;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  /* Takes the glare off white pages without inverting figures. */
+  filter: brightness(0.92);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5; /* Above the react-pdf text layer. */
+  overflow: hidden;
+  pointer-events: none;
+  /* Tints the page like a marker, so text under a highlight stays dark. */
+  mix-blend-mode: multiply;
+}
+
+.highlight {
+  position: absolute;
+  background: rgba(242, 160, 40, 0.55);
+  border-radius: 2px;
+  animation: highlightFadeIn 200ms ease-out;
+}
+
+.spanOutline {
+  position: absolute;
+  /* Drawn inside the box so it shows the exact bbox edge. */
+  outline: 1px solid rgba(230, 0, 90, 0.7);
+  outline-offset: -1px;
+}
+
+@keyframes highlightFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
