@@ -18,18 +18,8 @@ const PdfViewerClient = dynamic(() => import("./PdfViewerClient"), {
   loading: () => <p>Loading viewer…</p>,
 });
 
-/**
- * TEMPORARY: app/page.tsx still passes the scaffold's `documentId`. Delete this
- * type and the branch below once page.tsx passes `file` and `index`.
- */
-type ScaffoldProps = { documentId: string };
-
-export const PdfViewer = forwardRef<
-  PdfViewerHandle,
-  PdfViewerProps | ScaffoldProps
->(function PdfViewer(props, ref) {
-  if ("documentId" in props) {
-    return <p>PDF viewer not wired up yet ({props.documentId}).</p>;
+export const PdfViewer = forwardRef<PdfViewerHandle, PdfViewerProps>(
+  function PdfViewer(props, ref) {
+    return <PdfViewerClient {...props} viewerRef={ref} />;
   }
-  return <PdfViewerClient {...props} viewerRef={ref} />;
-});
+);
