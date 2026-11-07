@@ -26,7 +26,73 @@ Everything else in [features.md](./features.md) is **bonus** (accounts, Supabase
 
 ---
 
-## 3. Recommended repo layout (contract-first)
+## 3. File ownership (who edits what)
+
+**Rule:** Do not edit another person’s primary paths without a quick sync. **Everyone** may read everything; **schema changes** need all three in the loop.
+
+### Person 1 — Frontend & PDF viewer
+
+| Owns (implement here) | Touches only for integration |
+|------------------------|------------------------------|
+| `frontend/src/components/pdf/**` — react-pdf viewer, scroll, bbox highlights | `frontend/src/app/page.tsx` — layout wiring |
+| `frontend/src/components/lesson/**` — upload, lesson text panel, API polling | `frontend/src/lib/api.ts` — add client methods if new routes |
+| `frontend/src/lib/viewer-commands.ts` — **execute** `ViewerCommand[]` | `shared/schemas/viewer-commands.json` — propose changes to P2 |
+| `frontend/public/**` — static assets, copy of fixtures for offline dev | |
+
+**Does not own:** `backend/app/services/*`, `frontend/src/components/voice/*`, LLM prompts, ElevenLabs keys.
+
+### Person 2 — AI & lesson engine
+
+| Owns (implement here) | Touches only for integration |
+|------------------------|------------------------------|
+| `shared/schemas/**` — propose contract changes (trio approval) | `backend/app/main.py` — CORS only if needed |
+| `shared/fixtures/**` — golden JSON + later golden PDF | `backend/app/models/schemas.py` — keep in sync with `shared/schemas` |
+| `backend/app/services/pdf_extract.py` | |
+| `backend/app/services/lesson_generator.py` | |
+| `backend/app/services/rag.py` | |
+| `backend/app/services/llm.py` | |
+| `backend/app/api/documents.py` | |
+| `backend/app/api/lessons.py` | |
+| `backend/app/api/qa.py` | |
+| `backend/app/storage/**` | |
+
+**Does not own:** PDF React components, voice player UI, `backend/app/api/voice.py` (P3).
+
+### Person 3 — Voice & lesson orchestration
+
+| Owns (implement here) | Touches only for integration |
+|------------------------|------------------------------|
+| `frontend/src/components/voice/**` — TTS/STT, transcript, play/pause/interrupt | `frontend/src/app/page.tsx` — pass viewer command callback to P1 |
+| `frontend/src/hooks/useLessonSession.ts` — segment state + command bus to P1 | |
+| `backend/app/api/voice.py` — optional server-side ElevenLabs proxy | `frontend/src/lib/api.ts` — voice-specific endpoints only |
+| Runtime **`LessonState`** (in React state or small store); **not** persisted in MVP unless agreed | `shared/schemas/lesson-state.json` — propose fields to trio |
+
+**Does not own:** PyMuPDF ingest, lesson JSON generation, highlight geometry math (P1).
+
+### Shared / integration (all three)
+
+| Path | How we work it |
+|------|----------------|
+| `frontend/src/lib/types.ts` | P2 defines shape via schemas; P1 updates types when schemas change; P3 consumes `LessonPlan` / `LessonState` |
+| `frontend/src/lib/api.ts` | P1 maintains HTTP client; P2 documents routes; P3 adds calls for QA + voice |
+| `frontend/src/app/page.tsx` | **Integration shell** — each person lands components here at T+2h |
+| `docs/*`, root `README.md` | Anyone; keep run instructions accurate |
+
+### Branch suggestion
+
+| Person | Branch (example) | Merge target |
+|--------|------------------|----------------|
+| P1 | `feat/frontend-pdf` | `main` |
+| P2 | `feat/lesson-engine` (you: `abs`) | `main` |
+| P3 | `feat/voice-player` | `main` |
+
+Merge **`shared/` + skeleton** first so branches rebase cleanly.
+
+---
+
+## 4. Repo layout (scaffolded on `main`)
+
+Single repo, three branches merging to `main`. **Shared contracts live on `main` first** (or a short-lived `contracts` branch merged before feature work).
 
 Single repo, three branches merging to `main`. **Shared contracts live on `main` first** (or a short-lived `contracts` branch merged before feature work).
 
@@ -72,11 +138,13 @@ greatunihack2026/
 
 **Why `shared/` matters:** Most integration bugs are schema drift. P1 can build the viewer against **fixtures** before P2’s LLM is done; P3 can play audio from fixture `narration` while wiring ElevenLabs.
 
+**Scaffold status:** `shared/`, `backend/`, and `frontend/` exist with stubs. Demo IDs: `doc_demo`, `les_demo`. Backend returns fixtures until P2 implements real ingest/LLM.
+
 ---
 
-## 4. The four contracts (agree before coding)
+## 5. The four contracts (agree before coding)
 
-### 4.1 `DocumentIndex` (P2 produces, P1 consumes for highlights)
+### 5.1 `DocumentIndex` (P2 produces, P1 consumes for highlights)
 
 Minimum fields per span:
 
@@ -99,7 +167,7 @@ Minimum fields per span:
 
 **Fallback rule:** If highlight fails fuzzy match, `scroll_to_page` only (no silent wrong box).
 
-### 4.2 `LessonPlan` (P2 produces, P3 reads, P1 uses `on_enter`)
+### 5.2 `LessonPlan` (P2 produces, P3 reads, P1 uses `on_enter`)
 
 ```json
 {
@@ -125,7 +193,7 @@ Minimum fields per span:
 
 **MVP cap:** 5–12 segments, ~30–90s narration each (hackathon PDF = a few pages, not a whole textbook).
 
-### 4.3 `ViewerCommand` (P1 implements; P2/P3 only emit via plan or orchestrator)
+### 5.3 `ViewerCommand` (P1 implements; P2/P3 only emit via plan or orchestrator)
 
 Union type P1 executes:
 
@@ -136,7 +204,7 @@ Union type P1 executes:
 
 P3 fires `on_enter` when a segment **starts** (not word-synced).
 
-### 4.4 `LessonState` (P3 owns runtime; P2 reads for Q&A)
+### 5.4 `LessonState` (P3 owns runtime; P2 reads for Q&A)
 
 ```json
 {
@@ -180,7 +248,7 @@ On interrupt: `status: "paused"`, store `interrupt: { "question", "at_segment_id
 
 ---
 
-## 5. API surface (P2 implements first; stub returns fixtures)
+## 6. API surface (P2 implements first; stub returns fixtures)
 
 | Method | Path | Owner | Purpose |
 |--------|------|-------|---------|
@@ -197,7 +265,7 @@ P3 may add `/lessons/{id}/tts` later; **MVP:** P3 calls ElevenLabs from frontend
 
 ---
 
-## 6. Pre-development agreements (~20–30 min, do this now)
+## 7. Pre-development agreements (~20–30 min, do this now)
 
 Checklist — every person says yes/no:
 
@@ -214,7 +282,7 @@ Checklist — every person says yes/no:
 
 ---
 
-## 7. Parallel work without blocking
+## 8. Parallel work without blocking
 
 | Person | Hour 0–1 | Hour 1–2 | Hour 2–3 | Hour 3–4 |
 |--------|----------|----------|----------|----------|
@@ -230,7 +298,7 @@ Checklist — every person says yes/no:
 
 ---
 
-## 8. P2 LLM workflow (detailed, time-boxed)
+## 9. P2 LLM workflow (detailed, time-boxed)
 
 ### Ingestion (no LLM)
 
@@ -269,7 +337,7 @@ Checklist — every person says yes/no:
 
 ---
 
-## 9. During development — communication norms
+## 10. During development — communication norms
 
 - **#integration** or single Discord thread: post **only** schema/API changes + sample curl.
 - **Definition of done per PR:** passes `GET /health`, doesn’t break fixtures.
@@ -278,7 +346,7 @@ Checklist — every person says yes/no:
 
 ---
 
-## 10. Smoke test script (end of hackathon)
+## 11. Smoke test script (end of hackathon)
 
 1. Upload golden PDF.
 2. Wait for `DocumentIndex` (N spans &gt; 0).
@@ -290,7 +358,7 @@ Checklist — every person says yes/no:
 
 ---
 
-## 11. Risk register (P2)
+## 12. Risk register (P2)
 
 | Risk | Mitigation |
 |------|------------|
@@ -303,7 +371,7 @@ Checklist — every person says yes/no:
 
 ---
 
-## 12. Open decisions for trio (resolve in first 30 min)
+## 13. Open decisions for trio (resolve in first 30 min)
 
 1. Monorepo `frontend/` + `backend/` on `main` skeleton — who commits initial scaffold?
 2. Resume same segment vs continue from pause point?

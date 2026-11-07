@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+frontend/.next/
+frontend/out/
+
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+
+# Env & secrets
+.env
+.env.local
+backend/.env
+frontend/.env.local
+
+# Local data (uploaded PDFs, generated JSON)
+backend/data/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/

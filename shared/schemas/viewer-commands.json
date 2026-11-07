@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "viewer-commands.json",
+  "title": "ViewerCommand",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["type", "span_id"],
+      "properties": {
+        "type": { "const": "scroll_to_span" },
+        "span_id": { "type": "string" }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["type", "page"],
+      "properties": {
+        "type": { "const": "scroll_to_page" },
+        "page": { "type": "integer", "minimum": 1 }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["type", "span_ids"],
+      "properties": {
+        "type": { "const": "set_highlights" },
+        "span_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "const": "clear_highlights" }
+      }
+    }
+  ]
+}
