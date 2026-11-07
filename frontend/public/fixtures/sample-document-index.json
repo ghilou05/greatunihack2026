@@ -1,30 +1,2127 @@
 {
   "document_id": "doc_demo",
   "pages": [
-    { "page": 1, "width": 612, "height": 792 },
-    { "page": 2, "width": 612, "height": 792 }
+    {
+      "page": 1,
+      "width": 595.2755737304688,
+      "height": 841.8897705078125
+    },
+    {
+      "page": 2,
+      "width": 595.2755737304688,
+      "height": 841.8897705078125
+    },
+    {
+      "page": 3,
+      "width": 595.2755737304688,
+      "height": 841.8897705078125
+    },
+    {
+      "page": 4,
+      "width": 595.2755737304688,
+      "height": 841.8897705078125
+    }
   ],
   "spans": [
     {
       "span_id": "p1_l0",
       "unit_kind": "line",
       "page": 1,
-      "text": "Osmosis is the net movement of water across a selectively permeable membrane.",
-      "bbox": { "x0": 72, "y0": 120, "x1": 520, "y1": 136 }
+      "text": "Introductory Cell Biology: Lecture Notes",
+      "bbox": {
+        "x0": 70.86614227294922,
+        "y0": 35.67937088012695,
+        "x1": 229.42811584472656,
+        "y1": 48.045372009277344
+      }
     },
     {
       "span_id": "p1_l1",
       "unit_kind": "line",
       "page": 1,
-      "text": "Water moves from a region of lower solute concentration to higher solute concentration.",
-      "bbox": { "x0": 72, "y0": 150, "x1": 540, "y1": 166 }
+      "text": "Chapter 4",
+      "bbox": {
+        "x0": 484.8904113769531,
+        "y0": 35.67937088012695,
+        "x1": 524.4094848632812,
+        "y1": 48.045372009277344
+      }
+    },
+    {
+      "span_id": "p1_l2",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Page 1",
+      "bbox": {
+        "x0": 283.3772888183594,
+        "y0": 795.3643798828125,
+        "x1": 311.8982849121094,
+        "y1": 807.7303466796875
+      }
+    },
+    {
+      "span_id": "p1_l3",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Chapter 4: Cell Membranes and Osmosis",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 69.7968978881836,
+        "x1": 465.8661193847656,
+        "y1": 97.33689880371094
+      }
+    },
+    {
+      "span_id": "p1_l4",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "How a thin, flexible barrier controls what enters a cell, and why water follows solutes",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 99.37190246582031,
+        "x1": 485.8460998535156,
+        "y1": 114.48590087890625
+      }
+    },
+    {
+      "span_id": "p1_l5",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Every living cell has to solve the same problem. It must keep its interior chemically distinct from its",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 128.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 143.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l6",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "surroundings while still taking in nutrients and getting rid of waste. The structure that makes this",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 143.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 158.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l7",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "possible is the plasma membrane, a sheet only a few nanometres thick. These notes begin with how",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 158.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 173.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l8",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "the membrane is built, then look at how substances cross it, and finish with osmosis: the movement",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 173.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 188.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l9",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "of water that decides whether a cell keeps its shape, swells or shrivels.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 188.6138916015625,
+        "x1": 386.0212097167969,
+        "y1": 203.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l10",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "1. Structure of the Plasma Membrane",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 213.28689575195312,
+        "x1": 305.8741455078125,
+        "y1": 231.18789672851562
+      }
+    },
+    {
+      "span_id": "p1_l11",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "The basic building block of the membrane is the phospholipid. Each molecule has a polar head",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 236.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 251.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l12",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "group, containing a phosphate, joined through glycerol to two long fatty acid tails. The head",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 251.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 266.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l13",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "interacts readily with water, whereas the tails avoid it. A molecule with both kinds of region is",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 266.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 281.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l14",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "described as amphipathic, and this dual character explains almost everything about how membranes",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 281.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 296.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l15",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "assemble.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 296.6138916015625,
+        "x1": 119.942138671875,
+        "y1": 311.28790283203125
+      }
+    },
+    {
+      "span_id": "p1_l16",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "When phospholipids are placed in water they arrange themselves spontaneously so that the tails are",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 319.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 334.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l17",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "shielded and the heads remain in contact with the surrounding liquid. The most stable arrangement",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 334.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 349.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l18",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "for cell membranes is the bilayer, in which two sheets of phospholipid sit tail to tail. No enzyme or",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 349.6138610839844,
+        "x1": 518.4097290039062,
+        "y1": 364.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l19",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "energy source is needed for this. The bilayer forms because burying the tails lets the nearby water",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 364.6138610839844,
+        "x1": 518.40966796875,
+        "y1": 379.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l20",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "molecules adopt a more disordered, and therefore more favourable, arrangement. The hydrophobic",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 379.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 394.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l21",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "core of the finished sheet is what makes it such an effective barrier to charged and polar substances.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 394.6138610839844,
+        "x1": 516.1401977539062,
+        "y1": 409.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l22",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Individual lipids are not fixed in place. They drift rapidly within their own sheet, although flipping",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 417.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 432.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l23",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "from one sheet to the other is rare without the help of a protein. Singer and Nicolson captured this",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 432.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 447.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l24",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "picture in 1972 with the fluid mosaic model, which describes proteins dotted through a",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 447.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 462.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l25",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "two-dimensional fluid of lipid. Fluidity matters because many membrane proteins must move and",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 462.6138610839844,
+        "x1": 518.4096069335938,
+        "y1": 477.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l26",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "meet one another in order to work. It depends on the membrane's composition and its environment",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 477.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 492.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l27",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "in several ways:",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 492.6138610839844,
+        "x1": 147.73915100097656,
+        "y1": 507.2878723144531
+      }
+    },
+    {
+      "span_id": "p1_l28",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "•",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 515.296875,
+        "x1": 81.0661392211914,
+        "y1": 531.784912109375
+      }
+    },
+    {
+      "span_id": "p1_l29",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Tail saturation: double bonds put kinks in unsaturated tails, which stops them packing tightly",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 515.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 530.9478759765625
+      }
+    },
+    {
+      "span_id": "p1_l30",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "and so keeps the membrane more fluid.",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 530.6138916015625,
+        "x1": 266.0831298828125,
+        "y1": 545.2879028320312
+      }
+    },
+    {
+      "span_id": "p1_l31",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "•",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 548.296875,
+        "x1": 81.0661392211914,
+        "y1": 564.784912109375
+      }
+    },
+    {
+      "span_id": "p1_l32",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Tail length: longer tails have more contact with their neighbours, which makes the membrane",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 548.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 563.9478759765625
+      }
+    },
+    {
+      "span_id": "p1_l33",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "less fluid.",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 563.6138916015625,
+        "x1": 135.6451416015625,
+        "y1": 578.2879028320312
+      }
+    },
+    {
+      "span_id": "p1_l34",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "•",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 581.296875,
+        "x1": 81.0661392211914,
+        "y1": 597.784912109375
+      }
+    },
+    {
+      "span_id": "p1_l35",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Cholesterol: this acts as a buffer, stiffening the membrane at higher temperatures and",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 581.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 596.9478759765625
+      }
+    },
+    {
+      "span_id": "p1_l36",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "preventing tight packing at lower ones.",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 596.6138916015625,
+        "x1": 264.5651550292969,
+        "y1": 611.2879028320312
+      }
+    },
+    {
+      "span_id": "p1_l37",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "•",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 614.296875,
+        "x1": 81.0661392211914,
+        "y1": 630.784912109375
+      }
+    },
+    {
+      "span_id": "p1_l38",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Temperature: warming increases molecular motion, and so fluidity rises unless the",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 614.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 629.9478759765625
+      }
+    },
+    {
+      "span_id": "p1_l39",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "composition of the membrane changes to compensate.",
+      "bbox": {
+        "x0": 92.86614227294922,
+        "y0": 629.6138916015625,
+        "x1": 331.4671630859375,
+        "y1": 644.2879028320312
+      }
+    },
+    {
+      "span_id": "p1_l40",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "Lipids form the barrier, but proteins carry out most of the membrane's specific tasks. Integral",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 653.6138305664062,
+        "x1": 518.4094848632812,
+        "y1": 668.287841796875
+      }
+    },
+    {
+      "span_id": "p1_l41",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "proteins are embedded in the bilayer, and many span it completely, while peripheral proteins are",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 668.6138305664062,
+        "x1": 518.4096069335938,
+        "y1": 683.287841796875
+      }
+    },
+    {
+      "span_id": "p1_l42",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "attached more loosely to one surface. Between them they act as transporters, receptors, enzymes and",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 683.6138305664062,
+        "x1": 518.4095458984375,
+        "y1": 698.287841796875
+      }
+    },
+    {
+      "span_id": "p1_l43",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "anchors for the cytoskeleton. On the outer face, short carbohydrate chains attached to lipids and",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 698.6138305664062,
+        "x1": 518.4095458984375,
+        "y1": 713.287841796875
+      }
+    },
+    {
+      "span_id": "p1_l44",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "proteins form a coat known as the glycocalyx, which protects the cell and helps other cells to",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 713.6138305664062,
+        "x1": 518.4095458984375,
+        "y1": 728.287841796875
+      }
+    },
+    {
+      "span_id": "p1_l45",
+      "unit_kind": "line",
+      "page": 1,
+      "text": "recognise it.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 728.6138305664062,
+        "x1": 130.63414001464844,
+        "y1": 743.287841796875
+      }
     },
     {
       "span_id": "p2_l0",
       "unit_kind": "line",
       "page": 2,
-      "text": "In plant cells, osmosis affects turgor pressure and cell shape.",
-      "bbox": { "x0": 72, "y0": 100, "x1": 480, "y1": 116 }
+      "text": "Introductory Cell Biology: Lecture Notes",
+      "bbox": {
+        "x0": 70.86614227294922,
+        "y0": 35.67937088012695,
+        "x1": 229.42811584472656,
+        "y1": 48.045372009277344
+      }
+    },
+    {
+      "span_id": "p2_l1",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Chapter 4",
+      "bbox": {
+        "x0": 484.8904113769531,
+        "y0": 35.67937088012695,
+        "x1": 524.4094848632812,
+        "y1": 48.045372009277344
+      }
+    },
+    {
+      "span_id": "p2_l2",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Page 2",
+      "bbox": {
+        "x0": 283.3772888183594,
+        "y0": 795.3643798828125,
+        "x1": 311.8982849121094,
+        "y1": 807.7303466796875
+      }
+    },
+    {
+      "span_id": "p2_l3",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "2. Movement Across the Membrane",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 70.28689575195312,
+        "x1": 295.0321044921875,
+        "y1": 88.18789672851562
+      }
+    },
+    {
+      "span_id": "p2_l4",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Whether a substance crosses unaided depends largely on its size and polarity. Small nonpolar",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 93.61389923095703,
+        "x1": 518.40966796875,
+        "y1": 108.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l5",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "molecules such as oxygen and carbon dioxide dissolve in the hydrophobic core and pass through",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 108.61389923095703,
+        "x1": 518.4096069335938,
+        "y1": 123.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l6",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "quickly. Small uncharged polar molecules, including water and urea, cross much more slowly.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 123.61389923095703,
+        "x1": 518.409423828125,
+        "y1": 138.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l7",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Larger polar molecules such as glucose barely cross at all, and ions are almost completely excluded,",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 138.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 153.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l8",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "however small they are, because their charge and shell of bound water make the lipid interior very",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 153.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 168.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l9",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "unfavourable.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 168.6138916015625,
+        "x1": 137.65213012695312,
+        "y1": 183.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l10",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Simple diffusion is the net movement of a substance from a region of higher concentration to one of",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 191.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 206.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l11",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "lower concentration, driven only by the random motion of its molecules. For a substance crossing a",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 206.6138916015625,
+        "x1": 518.409423828125,
+        "y1": 221.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l12",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "membrane, the net flux per unit area is proportional to the concentration difference: J = P × (C out -",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 221.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 241.2259063720703
+      }
+    },
+    {
+      "span_id": "p2_l13",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "C in ), where P is the permeability of the membrane to that substance. A positive value of J means net",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 236.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 256.22589111328125
+      }
+    },
+    {
+      "span_id": "p2_l14",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "movement into the cell. Doubling the difference doubles the flux, and when the two concentrations",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 251.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 266.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l15",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "are equal the net flux falls to zero, even though individual molecules continue to cross in both",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 266.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 281.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l16",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "directions.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 281.6138916015625,
+        "x1": 123.0001449584961,
+        "y1": 296.28790283203125
+      }
+    },
+    {
+      "span_id": "p2_l17",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Substances that cannot cross the lipid core rely on proteins. Channels provide a water-filled pore",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 304.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 319.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l18",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "through which particular ions or molecules can pass, and many open only in response to a specific",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 319.6138610839844,
+        "x1": 518.4096069335938,
+        "y1": 334.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l19",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "signal. Carriers bind their passenger and change shape to release it on the other side. Both are forms",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 334.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 349.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l20",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "of facilitated diffusion: no direct energy input is needed, and movement is always down the",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 349.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 364.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l21",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "concentration gradient. Facilitated transport differs from simple diffusion in one important way.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 364.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 379.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l22",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Because there is a limited number of carriers, the rate levels off once they are all occupied, a",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 379.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 394.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l23",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "behaviour known as saturation. Transport of glucose into many body cells follows this pattern.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 394.6138610839844,
+        "x1": 493.2932434082031,
+        "y1": 409.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l24",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Moving a substance against its gradient requires energy. In primary active transport this comes",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 417.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 432.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l25",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "directly from ATP. The best-known example is the sodium-potassium pump, which moves three",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 432.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 447.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l26",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Na + ions out of the cell and two K + ions in for each ATP it hydrolyses. Secondary active transport",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 444.2198791503906,
+        "x1": 518.4095458984375,
+        "y1": 462.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l27",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "uses the gradient created by such a pump as its energy source. The sodium-glucose cotransporter in",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 462.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 477.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l28",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "the lining of the small intestine, for example, lets sodium run down its gradient and uses that",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 477.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 492.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l29",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "movement to drag glucose into the cell, even when glucose is already more concentrated inside.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 492.6138610839844,
+        "x1": 498.4522705078125,
+        "y1": 507.2878723144531
+      }
+    },
+    {
+      "span_id": "p2_l30",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "3. Osmosis and Osmotic Pressure",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 517.2869262695312,
+        "x1": 287.8431396484375,
+        "y1": 535.1879272460938
+      }
+    },
+    {
+      "span_id": "p2_l31",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Water deserves separate treatment because it is by far the most abundant molecule on both sides of",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 540.6138916015625,
+        "x1": 518.40966796875,
+        "y1": 555.2879028320312
+      }
+    },
+    {
+      "span_id": "p2_l32",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "the membrane. Some water crosses the bilayer directly, but in many tissues most of it passes through",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 555.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 570.2879028320312
+      }
+    },
+    {
+      "span_id": "p2_l33",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "dedicated channels called aquaporins. Cells in the kidney, for instance, regulate how much water",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 570.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 585.2879028320312
+      }
+    },
+    {
+      "span_id": "p2_l34",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "they reabsorb by changing the number of aquaporins in their membranes.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 585.6138916015625,
+        "x1": 399.1661682128906,
+        "y1": 600.2879028320312
+      }
+    },
+    {
+      "span_id": "p2_l35",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "Definition (osmosis). Osmosis is the net movement of water across a selectively permeable",
+      "bbox": {
+        "x0": 78.86614227294922,
+        "y0": 616.6138916015625,
+        "x1": 482.44525146484375,
+        "y1": 631.9478759765625
+      }
+    },
+    {
+      "span_id": "p2_l36",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "membrane, from a solution with a lower total solute concentration to a solution with a higher total",
+      "bbox": {
+        "x0": 78.86614227294922,
+        "y0": 631.6138916015625,
+        "x1": 509.9673156738281,
+        "y1": 646.2879028320312
+      }
+    },
+    {
+      "span_id": "p2_l37",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "solute concentration.",
+      "bbox": {
+        "x0": 78.86614227294922,
+        "y0": 646.6138916015625,
+        "x1": 170.5181427001953,
+        "y1": 661.2879028320312
+      }
+    },
+    {
+      "span_id": "p2_l38",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "The key point is that water responds to the number of dissolved particles, not to their chemical",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 679.6138305664062,
+        "x1": 518.40966796875,
+        "y1": 694.287841796875
+      }
+    },
+    {
+      "span_id": "p2_l39",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "identity. This is why chemists use osmolarity, the total concentration of osmotically active particles.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 694.6138305664062,
+        "x1": 518.40966796875,
+        "y1": 709.287841796875
+      }
+    },
+    {
+      "span_id": "p2_l40",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "A 1 M glucose solution is about 1 osmol/L, because glucose stays intact in water. A 1 M NaCl",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 709.6138305664062,
+        "x1": 518.4094848632812,
+        "y1": 724.287841796875
+      }
+    },
+    {
+      "span_id": "p2_l41",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "solution is close to 2 osmol/L, because each formula unit separates into one sodium ion and one",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 724.6138305664062,
+        "x1": 518.409423828125,
+        "y1": 739.287841796875
+      }
+    },
+    {
+      "span_id": "p2_l42",
+      "unit_kind": "line",
+      "page": 2,
+      "text": "chloride ion. Human blood plasma has an osmolarity of roughly 290 mosmol/L.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 739.6138305664062,
+        "x1": 428.5472106933594,
+        "y1": 754.287841796875
+      }
+    },
+    {
+      "span_id": "p3_l0",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Introductory Cell Biology: Lecture Notes",
+      "bbox": {
+        "x0": 70.86614227294922,
+        "y0": 35.67937088012695,
+        "x1": 229.42811584472656,
+        "y1": 48.045372009277344
+      }
+    },
+    {
+      "span_id": "p3_l1",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Chapter 4",
+      "bbox": {
+        "x0": 484.8904113769531,
+        "y0": 35.67937088012695,
+        "x1": 524.4094848632812,
+        "y1": 48.045372009277344
+      }
+    },
+    {
+      "span_id": "p3_l2",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Page 3",
+      "bbox": {
+        "x0": 283.3772888183594,
+        "y0": 795.3643798828125,
+        "x1": 311.8982849121094,
+        "y1": 807.7303466796875
+      }
+    },
+    {
+      "span_id": "p3_l3",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Suppose a rigid container is divided by a membrane permeable only to water, with pure water on",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 70.61389923095703,
+        "x1": 518.409423828125,
+        "y1": 85.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l4",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "one side and a salt solution on the other. Water will move into the salt solution and raise its level",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 85.61389923095703,
+        "x1": 518.4096069335938,
+        "y1": 100.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l5",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "until the extra pressure on that side exactly balances the tendency of water to enter. The pressure",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 100.61389923095703,
+        "x1": 518.4095458984375,
+        "y1": 115.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l6",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "needed to stop net flow is called the osmotic pressure. For a dilute solution it is estimated using the",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 115.61389923095703,
+        "x1": 518.4097290039062,
+        "y1": 130.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l7",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "van 't Hoff equation:",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 130.6138916015625,
+        "x1": 167.74815368652344,
+        "y1": 145.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l8",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "P osm = i × M × R × T",
+      "bbox": {
+        "x0": 105.21260070800781,
+        "y0": 153.6138916015625,
+        "x1": 200.04258728027344,
+        "y1": 173.2259063720703
+      }
+    },
+    {
+      "span_id": "p3_l9",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Here i is the number of particles formed per formula unit, M is the molar concentration, R is the gas",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 176.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 191.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l10",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "constant and T is the absolute temperature. As a worked example, take 0.15 M NaCl at body",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 191.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 206.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l11",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "temperature (310 K), assuming complete dissociation so that i = 2. Using R = 0.08206",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 206.6138916015625,
+        "x1": 518.4093627929688,
+        "y1": 221.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l12",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "L·atm/(mol·K) gives 2 × 0.15 × 0.08206 × 310, or about 7.6 atm. This is a surprisingly large value,",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 221.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 236.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l13",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "several times atmospheric pressure, and it shows why an unprotected cell placed in pure water can",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 236.6138916015625,
+        "x1": 518.40966796875,
+        "y1": 251.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l14",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "burst so quickly.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 251.6138916015625,
+        "x1": 149.8951416015625,
+        "y1": 266.28790283203125
+      }
+    },
+    {
+      "span_id": "p3_l15",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "4. Tonicity and Cell Volume",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 276.2868957519531,
+        "x1": 245.91812133789062,
+        "y1": 294.1878967285156
+      }
+    },
+    {
+      "span_id": "p3_l16",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Osmolarity alone does not predict what will happen to a cell, because it counts every particle",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 299.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 314.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l17",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "whether or not that particle can cross the membrane. A solute that crosses freely soon reaches a",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 314.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 329.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l18",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "similar concentration on both sides and stops exerting a lasting effect on water movement. To",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 329.6138610839844,
+        "x1": 518.40966796875,
+        "y1": 344.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l19",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "predict changes in cell volume, we need a measure that counts only the solutes that remain on one",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 344.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 359.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l20",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "side.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 359.6138610839844,
+        "x1": 97.33714294433594,
+        "y1": 374.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l21",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Definition (tonicity). Tonicity describes the effect of a surrounding solution on the volume of a",
+      "bbox": {
+        "x0": 78.86614227294922,
+        "y0": 390.6138610839844,
+        "x1": 500.7822570800781,
+        "y1": 405.9478759765625
+      }
+    },
+    {
+      "span_id": "p3_l22",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "cell. It depends only on the concentration of solutes that cannot cross the cell membrane.",
+      "bbox": {
+        "x0": 78.86614227294922,
+        "y0": 405.6138610839844,
+        "x1": 469.30023193359375,
+        "y1": 420.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l23",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "The three possible cases are summarised in Table 1. Note that the outcome differs between animal",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 438.6138610839844,
+        "x1": 518.4096069335938,
+        "y1": 453.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l24",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "and plant cells. An animal cell has no wall to resist expansion, while a plant cell's rigid wall pushes",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 453.6138610839844,
+        "x1": 518.40966796875,
+        "y1": 468.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l25",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "back as the cell fills. This turgor pressure is what holds up non-woody stems, and it explains why a",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 468.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 483.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l26",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "plant wilts when it is short of water.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 483.6138610839844,
+        "x1": 235.13412475585938,
+        "y1": 498.2878723144531
+      }
+    },
+    {
+      "span_id": "p3_l27",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Solution around the cell",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 510.75689697265625,
+        "x1": 178.82614135742188,
+        "y1": 524.6068725585938
+      }
+    },
+    {
+      "span_id": "p3_l28",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Net water",
+      "bbox": {
+        "x0": 207.25985717773438,
+        "y0": 510.75689697265625,
+        "x1": 249.17987060546875,
+        "y1": 524.6068725585938
+      }
+    },
+    {
+      "span_id": "p3_l29",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "movement",
+      "bbox": {
+        "x0": 207.25985717773438,
+        "y0": 523.7568969726562,
+        "x1": 251.6898651123047,
+        "y1": 537.6068725585938
+      }
+    },
+    {
+      "span_id": "p3_l30",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Animal cell",
+      "bbox": {
+        "x0": 297.9685363769531,
+        "y0": 510.75689697265625,
+        "x1": 346.57855224609375,
+        "y1": 524.6068725585938
+      }
+    },
+    {
+      "span_id": "p3_l31",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Plant cell",
+      "bbox": {
+        "x0": 411.3543395996094,
+        "y0": 510.75689697265625,
+        "x1": 451.0743408203125,
+        "y1": 524.6068725585938
+      }
+    },
+    {
+      "span_id": "p3_l32",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Hypotonic (e.g. 0.05 M",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 545.6668701171875,
+        "x1": 170.7461395263672,
+        "y1": 559.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l33",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "NaCl)",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 558.6668701171875,
+        "x1": 101.30614471435547,
+        "y1": 572.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l34",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Into the cell",
+      "bbox": {
+        "x0": 207.25985717773438,
+        "y0": 545.6668701171875,
+        "x1": 255.0298614501953,
+        "y1": 559.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l35",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Swells and may burst",
+      "bbox": {
+        "x0": 297.9685363769531,
+        "y0": 545.6668701171875,
+        "x1": 383.7985534667969,
+        "y1": 559.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l36",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "(lysis)",
+      "bbox": {
+        "x0": 297.9685363769531,
+        "y0": 558.6668701171875,
+        "x1": 322.9685363769531,
+        "y1": 572.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l37",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Becomes firm (turgid)",
+      "bbox": {
+        "x0": 411.3543395996094,
+        "y0": 545.6668701171875,
+        "x1": 500.7843322753906,
+        "y1": 559.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l38",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Isotonic (e.g. 0.15 M NaCl)",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 580.6668701171875,
+        "x1": 187.68614196777344,
+        "y1": 594.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l39",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "No net movement",
+      "bbox": {
+        "x0": 207.25985717773438,
+        "y0": 580.6668701171875,
+        "x1": 278.91986083984375,
+        "y1": 594.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l40",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Keeps its normal volume",
+      "bbox": {
+        "x0": 297.9685363769531,
+        "y0": 580.6668701171875,
+        "x1": 398.238525390625,
+        "y1": 594.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l41",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Becomes limp (flaccid)",
+      "bbox": {
+        "x0": 411.3543395996094,
+        "y0": 580.6668701171875,
+        "x1": 505.2243347167969,
+        "y1": 594.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l42",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Hypertonic (e.g. 0.30 M",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 602.6668701171875,
+        "x1": 173.5161590576172,
+        "y1": 616.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l43",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "NaCl)",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 615.6668701171875,
+        "x1": 101.30614471435547,
+        "y1": 629.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l44",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Out of the cell",
+      "bbox": {
+        "x0": 207.25985717773438,
+        "y0": 602.6668701171875,
+        "x1": 264.7498474121094,
+        "y1": 616.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l45",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Shrinks (crenation)",
+      "bbox": {
+        "x0": 297.9685363769531,
+        "y0": 602.6668701171875,
+        "x1": 374.8985290527344,
+        "y1": 616.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l46",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Membrane pulls away",
+      "bbox": {
+        "x0": 411.3543395996094,
+        "y0": 602.6668701171875,
+        "x1": 500.2243347167969,
+        "y1": 616.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l47",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "from wall (plasmolysis)",
+      "bbox": {
+        "x0": 411.3543395996094,
+        "y0": 615.6668701171875,
+        "x1": 506.9043273925781,
+        "y1": 629.0068969726562
+      }
+    },
+    {
+      "span_id": "p3_l48",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Table 1. Typical effects of solutions of different tonicity on animal and plant cells.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 640.6868896484375,
+        "x1": 404.9361572265625,
+        "y1": 652.8969116210938
+      }
+    },
+    {
+      "span_id": "p3_l49",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "Urea shows clearly why the two terms must be kept apart. A 0.3 M urea solution has about the same",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 662.6138916015625,
+        "x1": 518.4095458984375,
+        "y1": 677.2879028320312
+      }
+    },
+    {
+      "span_id": "p3_l50",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "osmolarity as the inside of a red blood cell, so it is iso-osmotic. However, urea gradually enters the",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 677.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 692.2879028320312
+      }
+    },
+    {
+      "span_id": "p3_l51",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "cell, and water follows it. The cell swells and eventually bursts, which means that the same solution",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 692.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 707.2879028320312
+      }
+    },
+    {
+      "span_id": "p3_l52",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "is hypotonic even though the total particle counts initially matched.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 707.6138916015625,
+        "x1": 373.2391662597656,
+        "y1": 722.2879028320312
+      }
+    },
+    {
+      "span_id": "p3_l53",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "The same reasoning applies in medicine. Normal saline (0.9% NaCl) is close to isotonic, so it can be",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 730.6138305664062,
+        "x1": 518.4096069335938,
+        "y1": 745.287841796875
+      }
+    },
+    {
+      "span_id": "p3_l54",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "given into a vein without harming blood cells. In contrast, a 5% glucose solution starts out roughly",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 745.6138305664062,
+        "x1": 518.4096069335938,
+        "y1": 760.287841796875
+      }
+    },
+    {
+      "span_id": "p3_l55",
+      "unit_kind": "line",
+      "page": 3,
+      "text": "iso-osmotic with plasma, but body cells take up and use the glucose, leaving behind water that",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 760.6138305664062,
+        "x1": 518.4095458984375,
+        "y1": 775.287841796875
+      }
+    },
+    {
+      "span_id": "p4_l0",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "Introductory Cell Biology: Lecture Notes",
+      "bbox": {
+        "x0": 70.86614227294922,
+        "y0": 35.67937088012695,
+        "x1": 229.42811584472656,
+        "y1": 48.045372009277344
+      }
+    },
+    {
+      "span_id": "p4_l1",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "Chapter 4",
+      "bbox": {
+        "x0": 484.8904113769531,
+        "y0": 35.67937088012695,
+        "x1": 524.4094848632812,
+        "y1": 48.045372009277344
+      }
+    },
+    {
+      "span_id": "p4_l2",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "Page 4",
+      "bbox": {
+        "x0": 283.3772888183594,
+        "y0": 795.3643798828125,
+        "x1": 311.8982849121094,
+        "y1": 807.7303466796875
+      }
+    },
+    {
+      "span_id": "p4_l3",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "behaves as a hypotonic fluid. Many organisms also face this challenge in nature. Freshwater protists",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 70.61389923095703,
+        "x1": 518.4095458984375,
+        "y1": 85.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l4",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "such as Paramecium take in water constantly and survive by pumping it out through contractile",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 85.61389923095703,
+        "x1": 518.4096069335938,
+        "y1": 100.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l5",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "vacuoles.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 100.61389923095703,
+        "x1": 118.10514831542969,
+        "y1": 115.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l6",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "We can also estimate how large a volume change to expect. If a cell behaves as an ideal osmometer,",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 123.61389923095703,
+        "x1": 518.4094848632812,
+        "y1": 138.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l7",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "and its solutes neither enter nor leave, then the amount of solute inside stays constant and water",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 138.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 153.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l8",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "moves until the inside and outside concentrations match. Consider a cell containing 300 mosmol/L",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 153.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 168.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l9",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "of trapped solute that is placed in a solution of 150 mosmol/L of non-penetrating solute. The internal",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 168.6138916015625,
+        "x1": 518.4094848632812,
+        "y1": 183.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l10",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "concentration must halve, and so the cell would need to double its volume. In reality part of a cell's",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 183.6138916015625,
+        "x1": 518.4096069335938,
+        "y1": 198.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l11",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "volume is taken up by proteins and other solids that do not behave in this way, so the calculation is",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 198.6138916015625,
+        "x1": 518.40966796875,
+        "y1": 213.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l12",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "only a first approximation. A red blood cell would normally burst before it reached this size.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 213.6138916015625,
+        "x1": 483.5032043457031,
+        "y1": 228.28790283203125
+      }
+    },
+    {
+      "span_id": "p4_l13",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "Animal cells are not passive during these changes. A cell also holds many large, charged molecules,",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 236.61386108398438,
+        "x1": 518.4095458984375,
+        "y1": 251.28787231445312
+      }
+    },
+    {
+      "span_id": "p4_l14",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "such as proteins and nucleic acids, that cannot leave. These draw in small ions and water, creating a",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 251.61386108398438,
+        "x1": 518.409423828125,
+        "y1": 266.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l15",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "constant tendency to swell. The sodium-potassium pump counteracts this by continually removing",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 266.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 281.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l16",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "sodium, and experiments show that cells gain water and swell when the pump is blocked by a drug",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 281.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 296.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l17",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "such as ouabain. Cells can respond to shorter-term stress as well. A swollen cell can open potassium",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 296.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 311.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l18",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "and chloride channels and release small organic molecules, so that water follows these solutes out.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 311.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 326.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l19",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "This response is known as regulatory volume decrease. A shrunken cell can do the reverse by taking",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 326.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 341.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l20",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "up ions through cotransporters, which is called regulatory volume increase.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 341.6138610839844,
+        "x1": 407.7242126464844,
+        "y1": 356.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l21",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "Whole organisms have to manage the same physical pressures on a larger scale. A freshwater fish is",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 364.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 379.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l22",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "hypertonic to its surroundings, so it gains water across its gills and gets rid of the excess by",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 379.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 394.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l23",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "producing large volumes of dilute urine. A typical marine fish faces the opposite problem. It loses",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 394.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 409.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l24",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "water to the sea, so it drinks seawater and uses specialised gill cells to pump out the excess salt. In",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 409.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 424.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l25",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "each case, energy is spent to maintain a steady internal state against a gradient that never goes away.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 424.6138610839844,
+        "x1": 518.4095458984375,
+        "y1": 439.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l26",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "To summarise, the lipid bilayer provides a general barrier, proteins provide selective routes through",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 447.6138610839844,
+        "x1": 518.4094848632812,
+        "y1": 462.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l27",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "it, and water follows the distribution of solutes that those proteins establish. Keeping the difference",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 462.6138610839844,
+        "x1": 518.409423828125,
+        "y1": 477.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l28",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "between osmolarity and tonicity clear will be useful in the next chapter, which considers how the",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 477.6138610839844,
+        "x1": 518.4093627929688,
+        "y1": 492.2878723144531
+      }
+    },
+    {
+      "span_id": "p4_l29",
+      "unit_kind": "line",
+      "page": 4,
+      "text": "ion gradients maintained by membrane pumps give rise to electrical signals in nerve cells.",
+      "bbox": {
+        "x0": 76.86614227294922,
+        "y0": 492.6138610839844,
+        "x1": 472.811279296875,
+        "y1": 507.2878723144531
+      }
     }
   ]
 }

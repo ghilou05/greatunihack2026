@@ -133,7 +133,8 @@ Merge **`shared/` + skeleton** first so branches rebase cleanly.
 └────────────────────────────────────┴──────────────────────┘
          ▲                                      │
          │         page.tsx wires props         │
-         └──────── executeCommands(…) ──────────┘
+         └──────────────────────────────────────┘
+           executeCommands(commands, handlers, fallbackPage)
 ```
 
 | UI block | Owner | Component | Not owned by |
@@ -143,12 +144,12 @@ Merge **`shared/` + skeleton** first so branches rebase cleanly.
 | Bottom-right | **P1** | `components/lesson/LessonPanel` | P3 (no play/pause/transcript here) |
 | Layout shell | **All** | `app/page.tsx` | — |
 
-P1 provides a **stable ref/callback** `executeCommands` bound to the viewer. P3 passes `onViewerCommands` into `LessonPlayer`; `page.tsx` connects them.
+P1 provides a **stable ref/callback** that runs `executeCommands(commands, handlers, fallbackPage)` on the viewer, where `handlers` is the `PdfViewerHandle` ref and `fallbackPage` is `segment.page`. P3 passes `onViewerCommands` into `LessonPlayer`; `page.tsx` connects them.
 
 ### `on_enter` → viewer
 
 1. **P3** (or orchestrator) calls `onEnterToCommands(segment.on_enter)` from `frontend/src/lib/viewer-commands.ts`.
-2. **P1** implements `executeCommands(commands, handlers)` — same function for Q&A `viewer_commands`.
+2. **P1** implements `executeCommands(commands, handlers, fallbackPage)` — same function for Q&A `viewer_commands`. `handlers` is the `PdfViewerHandle` ref; `fallbackPage` is `segment.page`.
 3. **On resume after Q&A:** P3 calls `resumeAfterQA()` in orchestrator, which **re-fires** `onEnterToCommands` for the current segment so citation highlights are replaced by the segment’s `on_enter` set.
 
 ### PDF file for the viewer
@@ -303,7 +304,7 @@ Union type:
 **Glue (in `viewer-commands.ts`):**
 
 - `onEnterToCommands(on_enter)` — **P3 calls** at segment start and on resume after Q&A.
-- `executeCommands(commands, handlers)` — **P1 implements** `handlers` on `PdfViewer`. Pass **`segment.page`** into `normalizeViewerCommands()` for span fallbacks.
+- `executeCommands(commands, handlers, fallbackPage)` — **P1 implements** `handlers` on `PdfViewer`: `handlers` is the `PdfViewerHandle` ref and `fallbackPage` is **`segment.page`**, used for span fallbacks.
 
 P2 returns ready-made `viewer_commands` on Q&A; P3 does not build those manually.
 
