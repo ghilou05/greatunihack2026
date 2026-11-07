@@ -46,6 +46,9 @@ LLM smoke / golden fixture (needs `OPENAI_API_KEY` in `backend/.env`):
 
 **P3:** send `narration_delivered` and `qa_turns`; always play `bridge`, then re-apply segment `on_enter`.
 
+**Full P2 manual test checklist:** [docs/p2-manual-testing.md](docs/p2-manual-testing.md)  
+**P1/P3 merge handoff (CP2/CP3, conflict hints):** [docs/p2-integration-handoff.md](docs/p2-integration-handoff.md)
+
 API smoke test:
 
 - `GET http://localhost:8000/health`

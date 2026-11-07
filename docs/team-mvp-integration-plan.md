@@ -67,6 +67,8 @@ Review objections — **what must be true on day 1** vs **what can wait**.
 
 ### Person 2 — AI & lesson engine
 
+**After P2 merge:** [p2-integration-handoff.md](./p2-integration-handoff.md) (scaffold deltas, CP messages, merge conflict hints).
+
 | Owns (implement here) | Touches only for integration |
 |------------------------|------------------------------|
 | `shared/schemas/**` — propose contract changes (trio approval) | `backend/app/main.py` — CORS only if needed |

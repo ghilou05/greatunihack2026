@@ -3,7 +3,9 @@
 Brief input for **solution design + implementation plan**. Contract: [CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md), [team-mvp-integration-plan.md](./team-mvp-integration-plan.md) §9.
 
 **Design:** [p2-solution-design.md](./p2-solution-design.md)  
-**Implementation plan:** [p2-implementation-plan.md](./p2-implementation-plan.md) → [implementation_plans/p2-lesson-engine-mvp.md](../implementation_plans/p2-lesson-engine-mvp.md)
+**Implementation plan:** [p2-implementation-plan.md](./p2-implementation-plan.md) → [implementation_plans/p2-lesson-engine-mvp.md](../implementation_plans/p2-lesson-engine-mvp.md)  
+**Manual testing:** [p2-manual-testing.md](./p2-manual-testing.md)  
+**P1/P3 merge handoff:** [p2-integration-handoff.md](./p2-integration-handoff.md)
 
 ---
 
