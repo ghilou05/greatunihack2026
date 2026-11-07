@@ -1,47 +1,45 @@
 """P2: generate and fetch LessonPlan."""
 
-import json
-import uuid
+from fastapi import APIRouter
 
-from fastapi import APIRouter, HTTPException
-
+from app.errors import NotFoundError
 from app.models.schemas import LessonPlan
-from app.services.lesson_generator import generate_lesson_plan
-from app.storage.local import document_index_path, lesson_plan_path
+from app.services.lesson_generator import generate_lesson_plan, validate_plan_against_index
+from app.storage import local
 
 router = APIRouter(tags=["lessons"])
 
-DEMO_LESSON_ID = "les_demo"
-
 
 @router.post("/documents/{document_id}/lessons", response_model=LessonPlan)
-def create_lesson(document_id: str, demo: bool = False) -> LessonPlan:
-    if demo or document_id == "doc_demo":
-        plan = generate_lesson_plan(document_id, "", use_fixture=True)
+def create_lesson(document_id: str, demo: bool = False, force: bool = False) -> LessonPlan:
+    local.require_document_id(document_id)
+    if (demo or document_id == local.DEMO_DOCUMENT_ID) and not force:
+        return local.load_fixture_lesson_plan()
+
+    index = local.load_index(document_id)
+    lesson_id = local.lesson_id_for(document_id)
+
+    with local.document_lock(document_id):
+        if not force:
+            cached = local.try_load_plan(lesson_id)
+            if (
+                cached is not None
+                and cached.lesson_id == lesson_id
+                and validate_plan_against_index(cached, index) == []
+            ):
+                return cached
+        plan, meta = generate_lesson_plan(index, lesson_id=lesson_id)
+        local.save_plan(lesson_id, plan)
+        from dataclasses import asdict
+
+        local.save_meta(lesson_id, asdict(meta))
         return plan
-
-    doc_index_file = document_index_path(document_id)
-    if not doc_index_file.exists():
-        raise HTTPException(status_code=404, detail="Document not ingested")
-
-    from app.models.schemas import DocumentIndex
-
-    index = DocumentIndex.model_validate(json.loads(doc_index_file.read_text()))
-    summary = " ".join(s.text[:120] for s in index.spans[:40])
-    lesson_id = f"les_{uuid.uuid4().hex[:12]}"
-    plan = generate_lesson_plan(document_id, summary, use_fixture=False)
-    plan = plan.model_copy(update={"lesson_id": lesson_id, "document_id": document_id})
-    lesson_plan_path(lesson_id).write_text(plan.model_dump_json(indent=2))
-    return plan
 
 
 @router.get("/lessons/{lesson_id}", response_model=LessonPlan)
 def get_lesson(lesson_id: str) -> LessonPlan:
-    if lesson_id == DEMO_LESSON_ID:
-        plan = generate_lesson_plan("doc_demo", "", use_fixture=True)
-        return plan
-
-    path = lesson_plan_path(lesson_id)
-    if not path.exists():
-        raise HTTPException(status_code=404, detail="Lesson not found")
-    return LessonPlan.model_validate(json.loads(path.read_text()))
+    local.require_lesson_id(lesson_id)
+    try:
+        return local.load_plan(lesson_id)
+    except NotFoundError:
+        raise NotFoundError("Lesson not found") from None

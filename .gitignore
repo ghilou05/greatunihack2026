@@ -11,9 +11,11 @@ backend/**/__pycache__/
 .pytest_cache/
 .mypy_cache/
 
-# Env & secrets
+# Env & secrets (never commit — API keys)
 .env
-.env.local
+.env.*
+**/.env
+!**/.env.example
 backend/.env
 frontend/.env.local
 

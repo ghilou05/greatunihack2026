@@ -1,17 +1,39 @@
 {
   "lesson_id": "les_demo",
   "document_id": "doc_demo",
-  "title": "Demo — Osmosis",
+  "title": "Cell Membranes and Osmosis",
   "segments": [
     {
       "id": "seg_01",
-      "goal": "Define osmosis",
+      "goal": "Explain phospholipids and bilayer formation",
       "page": 1,
-      "span_ids": ["p1_l0", "p1_l1"],
-      "narration": "We'll start with osmosis. It's how water crosses a membrane when concentrations differ on each side.",
+      "span_ids": [
+        "p1_l11",
+        "p1_l12",
+        "p1_l13",
+        "p1_l14",
+        "p1_l15",
+        "p1_l16",
+        "p1_l17",
+        "p1_l18",
+        "p1_l19",
+        "p1_l20"
+      ],
+      "narration": "A phospholipid has a water-friendly head and two water-avoiding tails. In water, these molecules arrange themselves into two layers with their tails protected between them. This bilayer forms spontaneously because shielding the tails allows surrounding water molecules to adopt a more favorable, disordered arrangement.",
       "on_enter": {
-        "scroll_to_span": "p1_l0",
-        "highlights": ["p1_l0", "p1_l1"]
+        "scroll_to_span": "p1_l11",
+        "highlights": [
+          "p1_l11",
+          "p1_l12",
+          "p1_l13",
+          "p1_l14",
+          "p1_l15",
+          "p1_l16",
+          "p1_l17",
+          "p1_l18",
+          "p1_l19",
+          "p1_l20"
+        ]
       },
       "cues": [],
       "check_question": null,
@@ -19,13 +41,235 @@
     },
     {
       "id": "seg_02",
-      "goal": "Connect to plant cells",
-      "page": 2,
-      "span_ids": ["p2_l0"],
-      "narration": "In plants, this movement changes turgor pressure, which is why cells can look firm or wilted.",
+      "goal": "Describe membrane fluidity",
+      "page": 1,
+      "span_ids": [
+        "p1_l22",
+        "p1_l23",
+        "p1_l24",
+        "p1_l25",
+        "p1_l26",
+        "p1_l27",
+        "p1_l28",
+        "p1_l29",
+        "p1_l30"
+      ],
+      "narration": "The membrane is not a rigid sheet: lipids move rapidly within their own layer, while movement between layers is rare without protein assistance. The fluid mosaic model also places proteins within this moving lipid sheet. Unsaturated tails have kinks that prevent tight packing and help maintain fluidity.",
       "on_enter": {
-        "scroll_to_span": "p2_l0",
-        "highlights": ["p2_l0"]
+        "scroll_to_span": "p1_l22",
+        "highlights": [
+          "p1_l22",
+          "p1_l23",
+          "p1_l24",
+          "p1_l25",
+          "p1_l26",
+          "p1_l27",
+          "p1_l28",
+          "p1_l29",
+          "p1_l30"
+        ]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": "seg_03"
+    },
+    {
+      "id": "seg_03",
+      "goal": "Compare facilitated diffusion with active transport",
+      "page": 2,
+      "span_ids": [
+        "p2_l17",
+        "p2_l18",
+        "p2_l19",
+        "p2_l20",
+        "p2_l21",
+        "p2_l22",
+        "p2_l23",
+        "p2_l24",
+        "p2_l25",
+        "p2_l26"
+      ],
+      "narration": "Channels and carriers help substances cross the membrane down their concentration gradients without direct energy input. Carrier transport can reach a maximum rate when all carriers are occupied. Moving against a gradient requires energy; the sodium-potassium pump uses ATP to move sodium out and potassium in.",
+      "on_enter": {
+        "scroll_to_span": "p2_l17",
+        "highlights": [
+          "p2_l17",
+          "p2_l18",
+          "p2_l19",
+          "p2_l20",
+          "p2_l21",
+          "p2_l22",
+          "p2_l23",
+          "p2_l24",
+          "p2_l25",
+          "p2_l26"
+        ]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": "seg_04"
+    },
+    {
+      "id": "seg_04",
+      "goal": "Define osmosis and osmolarity",
+      "page": 2,
+      "span_ids": [
+        "p2_l35",
+        "p2_l36",
+        "p2_l37",
+        "p2_l38",
+        "p2_l39",
+        "p2_l40",
+        "p2_l41",
+        "p2_l42"
+      ],
+      "narration": "Osmosis is the net movement of water across a selectively permeable membrane toward the solution with more dissolved particles. Osmolarity counts those particles rather than focusing on their identity. For example, sodium chloride produces roughly twice as many particles per formula unit as glucose does.",
+      "on_enter": {
+        "scroll_to_span": "p2_l35",
+        "highlights": [
+          "p2_l35",
+          "p2_l36",
+          "p2_l37",
+          "p2_l38",
+          "p2_l39",
+          "p2_l40",
+          "p2_l41",
+          "p2_l42"
+        ]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": "seg_05"
+    },
+    {
+      "id": "seg_05",
+      "goal": "Compare hypotonic and isotonic effects on cells",
+      "page": 3,
+      "span_ids": [
+        "p3_l32",
+        "p3_l33",
+        "p3_l34",
+        "p3_l35",
+        "p3_l36",
+        "p3_l37",
+        "p3_l38",
+        "p3_l39",
+        "p3_l40",
+        "p3_l41"
+      ],
+      "narration": "In a hypotonic solution, water enters cells: an animal cell may swell and burst, while a plant cell becomes firm. In an isotonic solution, there is no net water movement. The animal cell keeps its normal volume, but the plant cell becomes limp.",
+      "on_enter": {
+        "scroll_to_span": "p3_l32",
+        "highlights": [
+          "p3_l32",
+          "p3_l33",
+          "p3_l34",
+          "p3_l35",
+          "p3_l36",
+          "p3_l37",
+          "p3_l38",
+          "p3_l39",
+          "p3_l40",
+          "p3_l41"
+        ]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": "seg_06"
+    },
+    {
+      "id": "seg_06",
+      "goal": "Relate hypertonicity and penetrating solutes to cell volume",
+      "page": 3,
+      "span_ids": [
+        "p3_l42",
+        "p3_l43",
+        "p3_l44",
+        "p3_l45",
+        "p3_l46",
+        "p3_l47",
+        "p3_l48",
+        "p3_l49",
+        "p3_l50",
+        "p3_l51"
+      ],
+      "narration": "A hypertonic solution draws water out, shrinking an animal cell and pulling a plant cell's membrane away from its wall. Equal initial particle concentrations do not always prevent swelling. Urea can enter a red blood cell, and water follows, causing the cell to swell.",
+      "on_enter": {
+        "scroll_to_span": "p3_l42",
+        "highlights": [
+          "p3_l42",
+          "p3_l43",
+          "p3_l44",
+          "p3_l45",
+          "p3_l46",
+          "p3_l47",
+          "p3_l48",
+          "p3_l49",
+          "p3_l50",
+          "p3_l51"
+        ]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": "seg_07"
+    },
+    {
+      "id": "seg_07",
+      "goal": "Estimate cell volume changes",
+      "page": 4,
+      "span_ids": [
+        "p4_l6",
+        "p4_l7",
+        "p4_l8",
+        "p4_l9",
+        "p4_l10",
+        "p4_l11",
+        "p4_l12"
+      ],
+      "narration": "An ideal osmometer model predicts volume changes by assuming trapped solute stays inside while water moves until concentrations match. If the outside concentration is half the initial inside concentration, the model predicts that cell volume doubles. Real cells contain solids, however, so this is only an approximation.",
+      "on_enter": {
+        "scroll_to_span": "p4_l6",
+        "highlights": [
+          "p4_l6",
+          "p4_l7",
+          "p4_l8",
+          "p4_l9",
+          "p4_l10",
+          "p4_l11",
+          "p4_l12"
+        ]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": "seg_08"
+    },
+    {
+      "id": "seg_08",
+      "goal": "Explain cellular volume regulation",
+      "page": 4,
+      "span_ids": [
+        "p4_l13",
+        "p4_l14",
+        "p4_l15",
+        "p4_l16",
+        "p4_l17",
+        "p4_l18",
+        "p4_l19",
+        "p4_l20"
+      ],
+      "narration": "Cells contain charged molecules that draw in ions and water, creating a tendency to swell. The sodium-potassium pump helps counteract this tendency. Cells can also respond to changes in volume: swollen cells release solutes so water follows, while shrunken cells can take up ions.",
+      "on_enter": {
+        "scroll_to_span": "p4_l13",
+        "highlights": [
+          "p4_l13",
+          "p4_l14",
+          "p4_l15",
+          "p4_l16",
+          "p4_l17",
+          "p4_l18",
+          "p4_l19",
+          "p4_l20"
+        ]
       },
       "cues": [],
       "check_question": null,
