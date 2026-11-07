@@ -23,7 +23,6 @@ export default function HomePage() {
   /** Null until the react-pdf chunk has loaded and the viewer has reset itself. */
   const viewerRef = useRef<PdfViewerHandle | null>(null);
   const queuedCommands = useRef<QueuedCommands[]>([]);
-  const currentPage = useRef(1);
 
   // The viewer clears its highlights and pending scroll in a mount effect, so
   // queued commands have to run here, after that reset, not when the ref attaches.
@@ -36,7 +35,12 @@ export default function HomePage() {
     queuedCommands.current = [];
   }, [attachedViewer]);
 
-  /** Runs commands now, or queues them until the viewer exists. */
+  /**
+   * Runs commands now, or queues them until the viewer exists. Also handed to
+   * Person 3's LessonPlayer as `onViewerCommands`: the player's only route to the
+   * PDF. `fallbackPage` is the page of the segment the commands belong to, used
+   * when a command names an unknown span.
+   */
   const runViewerCommands = useCallback(
     (commands: ViewerCommand[], fallbackPage: number) => {
       if (viewerRef.current) {
@@ -48,27 +52,13 @@ export default function HomePage() {
     []
   );
 
-  /**
-   * Handed to Person 3's LessonPlayer as `onViewerCommands`. It is the player's
-   * only route to the PDF: segment `on_enter` and Q&A `viewer_commands` both come
-   * through here. Stable across renders and safe to call before the viewer loads.
-   * Commands carry no page, so unknown spans fall back to the current segment's.
-   */
-  const handleViewerCommands = useCallback(
-    (commands: ViewerCommand[]) =>
-      runViewerCommands(commands, currentPage.current),
-    [runViewerCommands]
-  );
-
   const enterSegment = (segment: LessonSegment) => {
-    currentPage.current = segment.page;
     runViewerCommands(onEnterToCommands(segment.on_enter), segment.page);
   };
 
   const handleDocumentReady = (ready: ReadyDocumentInfo) => {
     // Span ids like p1_l0 exist in every document, so drop anything still queued.
     queuedCommands.current = [];
-    currentPage.current = 1;
     setLesson(null);
     setSegmentIndex(0);
     setDocument(ready);
@@ -131,7 +121,7 @@ export default function HomePage() {
               <LessonPlayer
                 key={lesson.lesson_id}
                 lessonId={lesson.lesson_id}
-                onViewerCommands={handleViewerCommands}
+                onViewerCommands={runViewerCommands}
               />
             ) : (
               // LessonPlayer requires a lessonId, so it can't mount until there is one.

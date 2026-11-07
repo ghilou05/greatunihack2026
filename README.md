@@ -66,7 +66,9 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000 — uses `public/fixtures/` if the API is down.
+Open http://localhost:3000 (not `127.0.0.1`: the backend's default `CORS_ORIGINS` only allows `http://localhost:3000`).
+
+To run without the backend, set `NEXT_PUBLIC_USE_FIXTURES=true` in `.env.local` and restart `npm run dev`. The app only uses `public/fixtures/` when this is set; otherwise an unreachable API shows an error.
 
 ## Repo map
 

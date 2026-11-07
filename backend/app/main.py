@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import documents, health, lessons, qa, voice
+from app.api import documents, health, lessons, qa
 from app.config import get_settings
 from app.errors import register_error_handlers
 
