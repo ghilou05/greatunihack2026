@@ -12,10 +12,15 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "goal", "span_ids", "narration", "on_enter", "cues", "next"],
+        "required": ["id", "goal", "page", "span_ids", "narration", "on_enter", "cues", "next"],
         "properties": {
           "id": { "type": "string" },
           "goal": { "type": "string" },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Primary PDF page for scroll fallback when span ids are invalid"
+          },
           "span_ids": { "type": "array", "items": { "type": "string" } },
           "narration": { "type": "string" },
           "on_enter": { "$ref": "#/$defs/segmentOnEnter" },

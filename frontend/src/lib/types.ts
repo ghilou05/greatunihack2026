@@ -24,6 +24,7 @@ export type SegmentCue = {
 export type LessonSegment = {
   id: string;
   goal: string;
+  page: number;
   span_ids: string[];
   narration: string;
   on_enter: { scroll_to_span: string; highlights: string[] };

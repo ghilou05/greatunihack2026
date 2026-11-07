@@ -55,7 +55,8 @@ export function lookupSpan(index: DocumentIndex, spanId: string): Span | undefin
 /** Unknown span_id → scroll_to_page for that unit's page (or first segment page). */
 export function normalizeViewerCommands(
   commands: ViewerCommand[],
-  index: DocumentIndex | null
+  index: DocumentIndex | null,
+  fallbackPage = 1
 ): ViewerCommand[] {
   if (!index) return commands;
   const out: ViewerCommand[] = [];
@@ -65,7 +66,7 @@ export function normalizeViewerCommands(
       if (unit) {
         out.push(cmd);
       } else {
-        out.push({ type: "scroll_to_page", page: 1 });
+        out.push({ type: "scroll_to_page", page: fallbackPage });
       }
       continue;
     }

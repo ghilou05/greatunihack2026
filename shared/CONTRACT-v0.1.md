@@ -13,10 +13,10 @@ Changelog for the trio. Canonical JSON Schema files live in `schemas/`.
 | Artifact | Notes |
 |----------|--------|
 | `DocumentIndex.spans[]` | **Line-level** units: `unit_kind: "line"`, id `p{page}_l{index}`, pages **1-based**, PyMuPDF bbox union |
-| `LessonPlan.segments[]` | `cues: []` in MVP; `check_question` ignored by player |
+| `LessonPlan.segments[]` | Required **`page`** (1-based); `cues: []` in MVP; `check_question` ignored |
 | `LessonState` | No `open_loops`; `interrupt` has `narration_offset_ms`, `narration_delivered` |
-| `QARequest` | Optional `playback_ms`, `narration_delivered`, `qa_turns[]` |
-| `ViewerCommand` | Invalid `span_id` → P1 falls back to `scroll_to_page` |
+| `QARequest` | Optional `playback_ms`, `narration_delivered`, `qa_turns: {question, answer}[]` |
+| `ViewerCommand` | Invalid `span_id` → `scroll_to_page` to **`segment.page`** |
 
 ## HTTP
 
@@ -25,7 +25,7 @@ Changelog for the trio. Canonical JSON Schema files live in `schemas/`.
 | GET | `/documents/{id}` → `{ status, index? }` |
 | GET | `/documents/{id}/index` → `DocumentIndex` |
 | GET | `/documents/{id}/file` → PDF bytes (`doc_demo` → `shared/fixtures/golden-demo.pdf`) |
-| POST | `/documents`, `/documents/{id}/lessons`, `/lessons/{id}/qa` |
+| POST | `/documents`, `/documents/{id}/lessons` (**sync 200**), `/lessons/{id}/qa` |
 | GET | `/lessons/{id}`, `/health` |
 
 ## Pedagogy defaults
@@ -42,3 +42,13 @@ Changelog for the trio. Canonical JSON Schema files live in `schemas/`.
 | Apply commands to PDF | P1 | `executeCommands(commands, handlers)` |
 | Segment start / resume after Q&A | P3 | orchestrator calls `onEnterToCommands` then `executeCommands` via callback wired in `page.tsx` |
 | Q&A citation highlights | P2 response → P3 | `qa.viewer_commands` → same `executeCommands` |
+
+## Hour 0
+
+- Add `shared/fixtures/golden-demo.pdf`; regenerate `sample-document-index.json` from that file.
+
+## First hour (P3)
+
+- **TTS:** ElevenLabs in browser (localhost OK).
+- **STT:** Web Speech API.
+

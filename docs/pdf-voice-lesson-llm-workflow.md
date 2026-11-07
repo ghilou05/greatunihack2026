@@ -87,6 +87,7 @@ flowchart TB
     {
       "id": "seg_01",
       "goal": "Define osmosis",
+      "page": 3,
       "span_ids": ["p3_l12", "p3_l13"],
       "narration": "We'll start with the cell membrane...",
       "on_enter": { "scroll_to_span": "p3_l12", "highlights": ["p3_l12", "p3_l13"] },

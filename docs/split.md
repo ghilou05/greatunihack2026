@@ -46,5 +46,7 @@ Deliverable: A lesson player that speaks AI-generated text and accepts spoken qu
 6. **Viewer glue** — P3 calls `onEnterToCommands`; P1 implements `executeCommands`; re-fire `on_enter` on resume after Q&A.
 7. **Right rail** — P3: voice + transcript; P1: lesson panel (upload + segment text). See plan §3.5.
 8. **PDF bytes** — `GET /documents/{id}/file` + `shared/fixtures/golden-demo.pdf`.
+9. **Segments** — each has **`page`** for scroll fallback; sync lesson `POST` (200).
+10. **STT** — Web Speech API (P3); not ElevenLabs unless swapped in hour 1.
 
 **File-level ownership:** [team-mvp-integration-plan.md](./team-mvp-integration-plan.md) §3.
