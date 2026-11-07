@@ -43,8 +43,8 @@ Review objections — **what must be true on day 1** vs **what can wait**.
 | **Page numbers** | **1-based** everywhere (PyMuPDF `page_idx + 1`). | **Yes** — already in extractor. | P2 |
 | **`open_loops`** | Topics to revisit later in the lesson — **post-MVP**. Omit from runtime state for hackathon. | **Drop from MVP state** (schema optional / docs only). | — |
 | **`check_question`** | Optional end-of-segment micro-check — **post-MVP** (no auto-quiz flow in 4h). | Keep on `LessonSegment` as nullable, ignore in player. | — |
-| **Invalid `span_id`** | No fuzzy matching: unknown ID → **`scroll_to_page`** for that segment’s first known page. | **Yes** — P1 `viewer-commands.ts`. | P1 |
-| **TTS / STT API** | ElevenLabs (or browser STT) called **from frontend** in MVP. `backend/app/api/voice.py` is optional proxy if keys must be hidden. | **No new shared schema** until you move TTS server-side. | P3 |
+| **Invalid `span_id`** | No fuzzy matching: unknown ID → **`scroll_to_page`** using **`segment.page`**. | **Yes** — each segment has required `page` (1-based). | P2 + P1 |
+| **TTS / STT API** | **TTS:** ElevenLabs in browser. **STT:** Web Speech API (P3). Proxy only for public deploy. | **STT pick in §7.1**; keys on localhost OK. | P3 |
 
 **Bottom line:** Claude’s orchestrator-on-server concern is valid — **reject server orchestrator for MVP**. The rest is mostly **schema clarity + shorter segments + line units + resume offset**; word-level `cues` and `open_loops` do **not** block start.
 
@@ -159,7 +159,7 @@ P1 provides a **stable ref/callback** `executeCommands` bound to the viewer. P3 
 | `doc_demo` / refresh | `GET /documents/doc_demo/file` if `shared/fixtures/golden-demo.pdf` exists |
 | API down | `frontend/public/documents/golden-demo.pdf` (`DEV_DOCUMENT_PDF` in `api.ts`) |
 
-Team adds **one** golden PDF to `shared/fixtures/golden-demo.pdf` (and optionally copies to `public/documents/`).
+**Hour 0 pipeline:** `golden-demo.pdf` → ingest → `sample-document-index.json` → lesson plan fixture/LLM → `sample-lesson-plan.json`. Copy PDF to `frontend/public/documents/` optional.
 
 ---
 
@@ -241,9 +241,13 @@ Each entry in `spans[]` is a **line-level text unit** (not a PyMuPDF font span):
 
 **Coords:** PyMuPDF user space; P1 scales via pdf.js viewport.
 
-**Fallback rule:** Unknown `span_id` → `scroll_to_page` for the segment’s primary page (no fuzzy match).
+**Fallback rule:** Unknown `span_id` → `scroll_to_page` to **`segment.page`** (required on every segment).
 
 ### 5.2 `LessonPlan` (P2 produces, P3 reads, P1 uses `on_enter`)
+
+**Canonical schema:** [shared/schemas/lesson-plan.json](../shared/schemas/lesson-plan.json)
+
+Each **segment** required fields: `id`, `goal`, **`page`** (1-based), `span_ids`, `narration`, `on_enter`, `cues`, `next`. Optional: `check_question`.
 
 ```json
 {
@@ -254,6 +258,7 @@ Each entry in `spans[]` is a **line-level text unit** (not a PyMuPDF font span):
     {
       "id": "seg_01",
       "goal": "Define osmosis",
+      "page": 1,
       "span_ids": ["p1_l0", "p1_l1"],
       "narration": "We'll start with osmosis...",
       "on_enter": {
@@ -261,7 +266,22 @@ Each entry in `spans[]` is a **line-level text unit** (not a PyMuPDF font span):
         "highlights": ["p1_l0", "p1_l1"]
       },
       "cues": [],
+      "check_question": null,
       "next": "seg_02"
+    },
+    {
+      "id": "seg_02",
+      "goal": "Apply to plant cells",
+      "page": 2,
+      "span_ids": ["p2_l0"],
+      "narration": "In plants, turgor pressure depends on this flow...",
+      "on_enter": {
+        "scroll_to_span": "p2_l0",
+        "highlights": ["p2_l0"]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": null
     }
   ]
 }
@@ -283,7 +303,7 @@ Union type:
 **Glue (in `viewer-commands.ts`):**
 
 - `onEnterToCommands(on_enter)` — **P3 calls** at segment start and on resume after Q&A.
-- `executeCommands(commands, handlers)` — **P1 implements** `handlers` on `PdfViewer`.
+- `executeCommands(commands, handlers)` — **P1 implements** `handlers` on `PdfViewer`. Pass **`segment.page`** into `normalizeViewerCommands()` for span fallbacks.
 
 P2 returns ready-made `viewer_commands` on Q&A; P3 does not build those manually.
 
@@ -310,10 +330,12 @@ On interrupt: `status: "paused"`, `interrupt: { "at_segment_id", "narration_offs
   "question": "Why does water move?",
   "playback_ms": 12500,
   "narration_delivered": "We'll start with osmosis. Water moves when...",
-  "qa_turns": [],
+  "qa_turns": [{ "question": "...", "answer": "..." }],
   "max_cite_spans": 5
 }
 ```
+
+`qa_turns`: prior questions in this interrupt, `{ question, answer }[]`, newest last.
 
 **Q&A response** (P2):
 
@@ -341,7 +363,7 @@ On interrupt: `status: "paused"`, `interrupt: { "at_segment_id", "narration_offs
 | `GET` | `/documents/{id}` | P2 | Ingest status + full `DocumentIndex` in `index` when ready |
 | `GET` | `/documents/{id}/index` | P2 | Optional alias — same `DocumentIndex` body (P1 convenience) |
 | `GET` | `/documents/{id}/file` | P2 | PDF bytes for viewer (`doc_demo` → golden fixture) |
-| `POST` | `/documents/{id}/lessons` | P2 | Generate `LessonPlan` (idempotent: same doc → cache) |
+| `POST` | `/documents/{id}/lessons` | P2 | Generate `LessonPlan` — **synchronous** `200` + body (MVP); P1 spinner on button |
 | `GET` | `/lessons/{id}` | P2 | Fetch plan + document_id |
 | `POST` | `/lessons/{id}/qa` | P2 | Grounded interrupt answer |
 | `GET` | `/health` | anyone | CI + integration check |
@@ -356,7 +378,7 @@ On interrupt: `status: "paused"`, `interrupt: { "at_segment_id", "narration_offs
 
 Full contract summary: [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).
 
-1. **Golden PDF:** One 2–5 page lecture PDF in `shared/fixtures/` — **add before integration test**.
+1. **Hour 0 (blocking):** In order — **(a)** add `shared/fixtures/golden-demo.pdf` → **(b)** regenerate `sample-document-index.json` from that PDF → **(c)** regenerate or hand-fix `sample-lesson-plan.json` so every `span_id` and **`page`** matches the index. Then branch.
 2. **Schema version:** `shared/schemas/*` **v0.1** — changes only via trio huddle.
 3. **Text units:** **Line-level** ids `p{n}_l{i}`; see `shared/README.md`.
 4. **Segment sync:** `on_enter` at segment start only; `cues[]` empty in MVP.
@@ -366,6 +388,15 @@ Full contract summary: [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).
 8. **Storage:** Local disk under `backend/data/`; Supabase post-MVP.
 9. **Branches:** Per-person feature branches → `main`; scaffold already on repo.
 10. **Integration checkpoints:** T+90 min & T+180 min smoke tests.
+
+### 7.1 First-hour defaults (pick once, don’t block start)
+
+| Topic | MVP choice |
+|--------|------------|
+| **STT** | **Web Speech API** (Chrome/Edge) for “ask” — P3 owns; ElevenLabs STT only if Web Speech fails in demo |
+| **Lesson `POST …/lessons`** | **Synchronous** `200` + `LessonPlan` JSON; P1 loading state on button (no `202` poll in MVP) |
+| **`qa_turns`** | `{ "question": string, "answer": string }[]` on `QARequest` (see `shared/schemas/qa.json`) |
+| **ElevenLabs in browser** | OK for **localhost / private demo**; move to backend proxy only before public deploy |
 
 ---
 
@@ -401,6 +432,7 @@ Full contract summary: [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).
 
 - Output must match `lesson-plan.json` schema.
 - Every `span_id` in output must exist in `DocumentIndex` (validate in code; retry once on failure).
+- Every segment must include **`page`** (1-based) matching its primary teaching location.
 - Narration: conversational, 2–4 sentences per segment (**~15–30 seconds** when spoken).
 - Every segment includes `"cues": []` until timed highlights exist.
 - Teaching order follows document order unless PDF is obviously appendix-first.
@@ -453,7 +485,7 @@ Full contract summary: [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).
 |------|------------|
 | LLM invalid JSON | Pydantic validate + 1 retry with error feedback |
 | Hallucinated span_ids | Post-validate against index; drop invalid refs |
-| Ingest slow | Return 202 + poll; show spinner on P1 |
+| Lesson gen slow | MVP: synchronous POST + spinner; optional 202 poll post-hackathon only |
 | PDF is scanned image | MVP: fail fast with “needs text PDF”; OCR is out of scope |
 | Token limit | Plan from outline + span samples, not full raw text |
 | Team merge conflicts | P2 owns `backend/app/services/*` and `shared/schemas`; P3 owns `backend/app/api/voice*` or `frontend` voice hooks |
@@ -470,7 +502,9 @@ Full contract summary: [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).
 | 4 | **No Supabase** in MVP — local disk |
 | 5 | Demo PDF **≤ 10 pages** |
 | 6 | Highlight units = **lines** (`p{n}_l{i}`) |
-| 7 | TTS/STT **out of REST contract** (browser ElevenLabs) |
+| 7 | TTS ElevenLabs browser; STT **Web Speech API** (P3) |
+| 8 | Lesson `POST …/lessons` **synchronous** `200` |
+| 9 | Each segment has required **`page`** for highlight fallback |
 
 ---
 

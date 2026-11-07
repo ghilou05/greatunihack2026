@@ -2,6 +2,16 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "qa.json",
   "title": "QA",
+  "$defs": {
+    "QATurn": {
+      "type": "object",
+      "required": ["question", "answer"],
+      "properties": {
+        "question": { "type": "string" },
+        "answer": { "type": "string" }
+      }
+    }
+  },
   "oneOf": [
     {
       "title": "QARequest",
@@ -22,14 +32,8 @@
         },
         "qa_turns": {
           "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["question", "answer"],
-            "properties": {
-              "question": { "type": "string" },
-              "answer": { "type": "string" }
-            }
-          }
+          "description": "Prior Q&A in this interrupt; newest last",
+          "items": { "$ref": "#/$defs/QATurn" }
         },
         "max_cite_spans": { "type": "integer", "minimum": 1, "default": 5 }
       }

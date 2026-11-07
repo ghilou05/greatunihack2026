@@ -6,6 +6,7 @@
     {
       "id": "seg_01",
       "goal": "Define osmosis",
+      "page": 1,
       "span_ids": ["p1_l0", "p1_l1"],
       "narration": "We'll start with osmosis. It's how water crosses a membrane when concentrations differ on each side.",
       "on_enter": {
@@ -19,6 +20,7 @@
     {
       "id": "seg_02",
       "goal": "Connect to plant cells",
+      "page": 2,
       "span_ids": ["p2_l0"],
       "narration": "In plants, this movement changes turgor pressure, which is why cells can look firm or wilted.",
       "on_enter": {

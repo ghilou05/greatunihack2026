@@ -27,4 +27,6 @@ def validate_plan_against_index(plan: LessonPlan, span_ids: set[str]) -> list[st
         for sid in seg.span_ids + [seg.on_enter.scroll_to_span] + seg.on_enter.highlights:
             if sid not in span_ids:
                 errors.append(f"Unknown span_id {sid} in segment {seg.id}")
+        if seg.page < 1:
+            errors.append(f"Invalid page on segment {seg.id}")
     return errors

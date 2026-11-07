@@ -79,6 +79,7 @@ class SegmentCue(BaseModel):
 class LessonSegment(BaseModel):
     id: str
     goal: str
+    page: int = Field(ge=1)
     span_ids: list[str]
     narration: str
     on_enter: SegmentOnEnter
