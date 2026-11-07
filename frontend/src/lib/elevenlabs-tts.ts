@@ -48,6 +48,9 @@ export class ElevenLabsPlayer {
 
   pause(): void { this.audio?.pause(); }
 
+  get hasAudio(): boolean { return this.audio !== null; }
+  get currentTimeMs(): number { return Math.round((this.audio?.currentTime ?? 0) * 1000); }
+
   async resume(): Promise<void> { await this.audio?.play(); }
 
   stop(): void {
