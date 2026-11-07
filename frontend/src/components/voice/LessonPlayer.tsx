@@ -4,13 +4,14 @@
  * P3: ElevenLabs TTS/STT, segment state machine, interrupt + resume.
  */
 import { getLesson, postLessonQA } from "@/lib/api";
+import { ElevenLabsPlayer } from "@/lib/elevenlabs-tts";
 import {
   captureInterrupt,
   resumeAfterQA,
   startSegment,
 } from "@/lib/lesson-orchestrator";
 import type { ViewerCommand } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { LessonPlan, LessonState } from "@/lib/types";
 
 type Props = {
@@ -30,6 +31,27 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
   const [plan, setPlan] = useState<LessonPlan | null>(null);
   const [state, setState] = useState<LessonState>(() => initialState(lessonId));
   const [transcript, setTranscript] = useState("");
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+  const [voiceStatus, setVoiceStatus] = useState("idle");
+  const voicePlayer = useRef<ElevenLabsPlayer | null>(null);
+  const voiceAttempt = useRef(0);
+
+  useEffect(() => () => voicePlayer.current?.stop(), []);
+
+  const testVoice = async () => {
+    const attempt = ++voiceAttempt.current;
+    voicePlayer.current ??= new ElevenLabsPlayer(() => setVoiceStatus("idle"));
+    setVoiceError(null);
+    setVoiceStatus("loading");
+    try {
+      await voicePlayer.current.speak("Welcome to your lesson on Newton's laws.");
+      if (attempt === voiceAttempt.current) setVoiceStatus("playing");
+    } catch (error) {
+      if (attempt !== voiceAttempt.current) return;
+      setVoiceError(error instanceof Error ? error.message : "Could not play speech.");
+      setVoiceStatus("idle");
+    }
+  };
 
   useEffect(() => {
     getLesson(lessonId)
@@ -97,6 +119,10 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
           : ""}
       </p>
       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+        <button type="button" onClick={testVoice}>Test voice</button>
+        <button type="button" onClick={() => { voicePlayer.current?.pause(); setVoiceStatus("paused"); }} disabled={voiceStatus !== "playing"}>Pause voice</button>
+        <button type="button" onClick={() => { voicePlayer.current?.resume().then(() => setVoiceStatus("playing")).catch((error) => setVoiceError(error instanceof Error ? error.message : "Could not resume speech.")); }} disabled={voiceStatus !== "paused"}>Resume voice</button>
+        <button type="button" onClick={() => { voiceAttempt.current += 1; voicePlayer.current?.stop(); setVoiceStatus("idle"); }} disabled={voiceStatus === "idle"}>Stop voice</button>
         <button type="button" onClick={() => playSegment(0)}>
           Play segment 1
         </button>
@@ -107,6 +133,7 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
           Ask (demo)
         </button>
       </div>
+      {voiceError && <p role="alert">{voiceError}</p>}
       <p
         style={{
           marginTop: "1rem",
