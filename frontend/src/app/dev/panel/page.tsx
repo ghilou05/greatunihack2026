@@ -13,10 +13,11 @@ const placeholder: CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  background: "#ddd",
-  border: "1px solid #444",
-  color: "#444",
-  font: "12px Arial, Helvetica, sans-serif",
+  background: "var(--panel)",
+  border: "1px dashed var(--line-strong)",
+  borderRadius: "var(--radius)",
+  color: "var(--muted)",
+  fontSize: 13,
 };
 
 export default function DevPanelPage() {
@@ -35,7 +36,7 @@ export default function DevPanelPage() {
   }, [segmentCount, currentSegmentIndex]);
 
   return (
-    <main style={{ height: "100vh", background: "#e8e8e8" }}>
+    <main style={{ height: "100vh" }}>
       <div style={placeholder}>PdfViewer placeholder</div>
       <aside
         style={{
