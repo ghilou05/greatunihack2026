@@ -8,7 +8,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   generateLesson,
   getDocumentFileUrl,
-  getLesson,
   pollDocumentUntilReady,
   uploadDocument,
 } from "@/lib/api";
@@ -24,10 +23,6 @@ export type ReadyDocumentInfo = {
 };
 
 type Props = {
-  /** Reopen an existing lesson instead of showing the upload screen. */
-  lessonId?: string;
-  /** Skip the upload and read or generate from this document. */
-  documentId?: string;
   currentSegmentIndex?: number;
   onSelectSegment?: (index: number) => void;
   onDocumentReady?: (document: ReadyDocumentInfo) => void;
@@ -41,15 +36,12 @@ type View =
   | { phase: "ready"; lesson: LessonPlan };
 
 /** What to run. Updated as steps finish, so a retry doesn't repeat a finished upload. */
-type Job = { file?: File; documentId?: string; lessonId?: string };
+type Job = { file?: File; documentId?: string };
 
 const READING = "Reading your document…";
 const BUILDING = "Building your lesson…";
-const LOADING = "Loading your lesson…";
 
 export function LessonPanel({
-  lessonId,
-  documentId,
   currentSegmentIndex = 0,
   onSelectSegment,
   onDocumentReady,
@@ -72,14 +64,13 @@ export function LessonPanel({
     jobRef.current = job;
 
     try {
-      setView({ phase: "working", message: job.lessonId ? LOADING : READING });
+      setView({ phase: "working", message: READING });
 
       if (job.file && !job.documentId) {
         job.documentId = (await uploadDocument(job.file, signal)).document_id;
       }
 
-      let lesson = job.lessonId ? await getLesson(job.lessonId, signal) : null;
-      const docId = job.documentId ?? lesson?.document_id;
+      const docId = job.documentId;
       if (!docId) throw new Error("No document to read.");
 
       const doc = await pollDocumentUntilReady(docId, { signal });
@@ -90,10 +81,8 @@ export function LessonPanel({
         fileUrl: getDocumentFileUrl(docId),
       });
 
-      if (!lesson) {
-        setView({ phase: "working", message: BUILDING });
-        lesson = await generateLesson(docId, signal);
-      }
+      setView({ phase: "working", message: BUILDING });
+      const lesson = await generateLesson(docId, signal);
       if (signal.aborted) return;
 
       callbacksRef.current.onLessonReady?.(lesson);
@@ -108,10 +97,7 @@ export function LessonPanel({
     }
   }, []);
 
-  useEffect(() => {
-    if (lessonId || documentId) run({ lessonId, documentId });
-    return () => abortRef.current?.abort();
-  }, [lessonId, documentId, run]);
+  useEffect(() => () => abortRef.current?.abort(), []);
 
   const startOver = () => {
     abortRef.current?.abort();

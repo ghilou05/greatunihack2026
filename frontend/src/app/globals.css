@@ -1,10 +1,13 @@
+/* Light low-fi look from docs/wireframe.png. */
 :root {
-  --bg: #0f1115;
-  --panel: #1a1d24;
-  --text: #e8eaed;
-  --muted: #9aa0a6;
-  --accent: #7c9cff;
+  --bg: #e8e8e8;
+  --panel: #fff;
+  --text: #222;
+  --muted: #666;
+  --accent: #444;
   --highlight: rgba(124, 156, 255, 0.35);
+  --line: #444;
+  --bar: #888;
 }
 
 * {
@@ -18,7 +21,7 @@ body {
   min-height: 100%;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 main {
@@ -29,8 +32,108 @@ main {
   min-height: 100vh;
 }
 
+/* Main lesson screen */
+.lesson-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+}
+
+.lesson-topbar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.lesson-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lesson-progress {
+  width: 180px;
+  height: 8px;
+  border: 1px solid var(--line);
+}
+
+.lesson-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--bar);
+}
+
+.lesson-step {
+  white-space: nowrap;
+}
+
+.lesson-main {
+  flex: 1;
+  gap: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+.lesson-viewer {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.lesson-rail {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+}
+
+.lesson-player {
+  flex: 0 0 auto;
+  max-height: 45%;
+  overflow-y: auto;
+}
+
+.lesson-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 120px;
+  margin: 0;
+  padding: 16px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
   main {
     grid-template-columns: 1fr;
+  }
+
+  .lesson-shell {
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  .lesson-viewer {
+    height: 70dvh;
+  }
+
+  .lesson-rail {
+    overflow-y: visible;
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .lesson-player {
+    max-height: none;
   }
 }
