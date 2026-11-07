@@ -1,8 +1,14 @@
 # Fixtures
 
 - **JSON:** `sample-*` — work without a PDF.
-- **`golden-demo.pdf`:** **Hour 0** — add your 2–5 page team test PDF here before branching.
-- After adding, regenerate **`sample-document-index.json`** from this PDF:
-  `cd backend && .venv/bin/python -m app.services.pdf_extract ../shared/fixtures/golden-demo.pdf`
-  then copy/save output as `shared/fixtures/sample-document-index.json` (set `document_id` to `doc_demo`).
-- Copy the same PDF to `frontend/public/documents/golden-demo.pdf` for offline dev.
+**Hour 0 order (blocking):**
+
+1. Add **`golden-demo.pdf`** (2–5 pages).
+2. Regenerate **`sample-document-index.json`** from that PDF (`document_id`: `doc_demo`).
+3. Update **`sample-lesson-plan.json`** (and `frontend/public/fixtures/` copies) — every segment needs **`page`** + valid `span_id`s from step 2.
+
+Extract helper (from repo root):
+
+`backend/.venv/bin/python -m app.services.pdf_extract shared/fixtures/golden-demo.pdf`
+
+Copy PDF to `frontend/public/documents/golden-demo.pdf` for offline dev.

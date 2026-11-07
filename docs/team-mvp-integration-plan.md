@@ -159,7 +159,7 @@ P1 provides a **stable ref/callback** `executeCommands` bound to the viewer. P3 
 | `doc_demo` / refresh | `GET /documents/doc_demo/file` if `shared/fixtures/golden-demo.pdf` exists |
 | API down | `frontend/public/documents/golden-demo.pdf` (`DEV_DOCUMENT_PDF` in `api.ts`) |
 
-Team adds **one** golden PDF to `shared/fixtures/golden-demo.pdf` (and optionally copies to `public/documents/`).
+**Hour 0 pipeline:** `golden-demo.pdf` → ingest → `sample-document-index.json` → lesson plan fixture/LLM → `sample-lesson-plan.json`. Copy PDF to `frontend/public/documents/` optional.
 
 ---
 
@@ -245,6 +245,10 @@ Each entry in `spans[]` is a **line-level text unit** (not a PyMuPDF font span):
 
 ### 5.2 `LessonPlan` (P2 produces, P3 reads, P1 uses `on_enter`)
 
+**Canonical schema:** [shared/schemas/lesson-plan.json](../shared/schemas/lesson-plan.json)
+
+Each **segment** required fields: `id`, `goal`, **`page`** (1-based), `span_ids`, `narration`, `on_enter`, `cues`, `next`. Optional: `check_question`.
+
 ```json
 {
   "lesson_id": "les_xyz",
@@ -262,7 +266,22 @@ Each entry in `spans[]` is a **line-level text unit** (not a PyMuPDF font span):
         "highlights": ["p1_l0", "p1_l1"]
       },
       "cues": [],
+      "check_question": null,
       "next": "seg_02"
+    },
+    {
+      "id": "seg_02",
+      "goal": "Apply to plant cells",
+      "page": 2,
+      "span_ids": ["p2_l0"],
+      "narration": "In plants, turgor pressure depends on this flow...",
+      "on_enter": {
+        "scroll_to_span": "p2_l0",
+        "highlights": ["p2_l0"]
+      },
+      "cues": [],
+      "check_question": null,
+      "next": null
     }
   ]
 }
@@ -359,7 +378,7 @@ On interrupt: `status: "paused"`, `interrupt: { "at_segment_id", "narration_offs
 
 Full contract summary: [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).
 
-1. **Hour 0 — golden PDF:** Add `shared/fixtures/golden-demo.pdf` (2–5 pages) **before anyone branches**. Re-run ingest and **replace** `sample-document-index.json` from **that exact PDF** (line ids must match real lines).
+1. **Hour 0 (blocking):** In order — **(a)** add `shared/fixtures/golden-demo.pdf` → **(b)** regenerate `sample-document-index.json` from that PDF → **(c)** regenerate or hand-fix `sample-lesson-plan.json` so every `span_id` and **`page`** matches the index. Then branch.
 2. **Schema version:** `shared/schemas/*` **v0.1** — changes only via trio huddle.
 3. **Text units:** **Line-level** ids `p{n}_l{i}`; see `shared/README.md`.
 4. **Segment sync:** `on_enter` at segment start only; `cues[]` empty in MVP.

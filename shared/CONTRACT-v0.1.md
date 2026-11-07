@@ -1,22 +1,39 @@
 # Integration contract v0.1 (agreed)
 
-Changelog for the trio. Canonical JSON Schema files live in `schemas/`.
+Changelog for the trio. Canonical JSON Schema: `schemas/*.json` (especially [lesson-plan.json](./schemas/lesson-plan.json)).
 
 ## Architecture
 
 - **Orchestrator:** browser TypeScript (`frontend/src/lib/lesson-orchestrator.ts`). Backend is **REST only**.
 - **`LessonState`:** frontend-only; not stored on the server in MVP.
-- **Voice:** ElevenLabs from the browser; no TTS/STT in REST contract unless P3 adds an optional proxy.
+- **Voice:** ElevenLabs TTS in browser; STT **Web Speech API** (P3).
 
 ## Data model
 
 | Artifact | Notes |
 |----------|--------|
 | `DocumentIndex.spans[]` | **Line-level** units: `unit_kind: "line"`, id `p{page}_l{index}`, pages **1-based**, PyMuPDF bbox union |
-| `LessonPlan.segments[]` | Required **`page`** (1-based); `cues: []` in MVP; `check_question` ignored |
+| `LessonPlan.segments[]` | See segment shape below — **`page` required** on every segment |
 | `LessonState` | No `open_loops`; `interrupt` has `narration_offset_ms`, `narration_delivered` |
 | `QARequest` | Optional `playback_ms`, `narration_delivered`, `qa_turns: {question, answer}[]` |
 | `ViewerCommand` | Invalid `span_id` → `scroll_to_page` to **`segment.page`** |
+
+### `LessonPlan` segment (required)
+
+```json
+{
+  "id": "seg_01",
+  "goal": "...",
+  "page": 1,
+  "span_ids": ["p1_l0"],
+  "narration": "...",
+  "on_enter": { "scroll_to_span": "p1_l0", "highlights": ["p1_l0"] },
+  "cues": [],
+  "next": "seg_02"
+}
+```
+
+`page` is the scroll fallback when highlight span ids are missing or invalid.
 
 ## HTTP
 
@@ -43,12 +60,13 @@ Changelog for the trio. Canonical JSON Schema files live in `schemas/`.
 | Segment start / resume after Q&A | P3 | orchestrator calls `onEnterToCommands` then `executeCommands` via callback wired in `page.tsx` |
 | Q&A citation highlights | P2 response → P3 | `qa.viewer_commands` → same `executeCommands` |
 
-## Hour 0
+## Hour 0 (before branches)
 
-- Add `shared/fixtures/golden-demo.pdf`; regenerate `sample-document-index.json` from that file.
+1. `shared/fixtures/golden-demo.pdf`
+2. Regenerate `sample-document-index.json` from that PDF (line units)
+3. Regenerate or fix `sample-lesson-plan.json` — all `span_id`s + **`page`** align with the index
 
 ## First hour (P3)
 
 - **TTS:** ElevenLabs in browser (localhost OK).
 - **STT:** Web Speech API.
-
