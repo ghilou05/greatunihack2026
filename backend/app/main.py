@@ -4,7 +4,7 @@ from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import documents, health, lessons, qa, voice
+from app.api import documents, health, lessons, qa
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = Path(os.getenv("DATA_DIR", ROOT / "backend" / "data"))
@@ -25,4 +25,3 @@ app.include_router(health.router)
 app.include_router(documents.router)
 app.include_router(lessons.router)
 app.include_router(qa.router)
-app.include_router(voice.router)

@@ -29,6 +29,20 @@
       },
       "cues": [],
       "check_question": null,
+      "next": "seg_03"
+    },
+    {
+      "id": "seg_03",
+      "goal": "Review osmosis",
+      "page": 2,
+      "span_ids": ["p2_l0"],
+      "narration": "To recap, water moves across a membrane by osmosis. In plant cells, that movement affects turgor pressure and how firm the cells feel.",
+      "on_enter": {
+        "scroll_to_span": "p2_l0",
+        "highlights": ["p2_l0"]
+      },
+      "cues": [],
+      "check_question": null,
       "next": null
     }
   ]
