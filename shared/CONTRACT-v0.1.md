@@ -24,6 +24,7 @@ Changelog for the trio. Canonical JSON Schema files live in `schemas/`.
 |--------|------|
 | GET | `/documents/{id}` → `{ status, index? }` |
 | GET | `/documents/{id}/index` → `DocumentIndex` |
+| GET | `/documents/{id}/file` → PDF bytes (`doc_demo` → `shared/fixtures/golden-demo.pdf`) |
 | POST | `/documents`, `/documents/{id}/lessons`, `/lessons/{id}/qa` |
 | GET | `/lessons/{id}`, `/health` |
 
@@ -31,4 +32,13 @@ Changelog for the trio. Canonical JSON Schema files live in `schemas/`.
 
 - Segments: **15–30s** narration (~2–4 sentences).
 - Highlights: **`on_enter` only** at segment start (no `cues` timing in MVP).
-- Resume: **same segment** at saved `narration_offset_ms` after Q&A.
+- Resume: **same segment** at saved `narration_offset_ms` after Q&A; then **re-apply** `onEnterToCommands(segment.on_enter)` so Q&A citation highlights are replaced.
+
+## Viewer commands (glue)
+
+| Step | Owner | Function |
+|------|--------|----------|
+| `on_enter` → `ViewerCommand[]` | Shared helper (P1 file) | `onEnterToCommands()` in `viewer-commands.ts` — **P3 calls this** |
+| Apply commands to PDF | P1 | `executeCommands(commands, handlers)` |
+| Segment start / resume after Q&A | P3 | orchestrator calls `onEnterToCommands` then `executeCommands` via callback wired in `page.tsx` |
+| Q&A citation highlights | P2 response → P3 | `qa.viewer_commands` → same `executeCommands` |

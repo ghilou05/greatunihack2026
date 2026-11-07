@@ -3,7 +3,7 @@
  * No server-side orchestration in MVP.
  */
 import type { LessonPlan, LessonSegment, LessonState, ViewerCommand } from "@/lib/types";
-import { segmentOnEnterCommands } from "@/lib/viewer-commands";
+import { onEnterToCommands } from "@/lib/viewer-commands";
 
 export type OrchestratorHandlers = {
   onViewerCommands: (commands: ViewerCommand[]) => void;
@@ -33,7 +33,7 @@ export function startSegment(
     segment_index: index,
     interrupt: null,
   };
-  handlers.onViewerCommands(segmentOnEnterCommands(segment.on_enter));
+  handlers.onViewerCommands(onEnterToCommands(segment.on_enter));
   handlers.onTranscript(segment.narration);
   return { state, segment };
 }
@@ -55,7 +55,15 @@ export function captureInterrupt(
   };
 }
 
-export function resumeAfterQA(state: LessonState): LessonState {
+export function resumeAfterQA(
+  plan: LessonPlan,
+  state: LessonState,
+  handlers: OrchestratorHandlers
+): LessonState {
+  const segment = plan.segments[state.segment_index];
+  if (segment) {
+    handlers.onViewerCommands(onEnterToCommands(segment.on_enter));
+  }
   return {
     ...state,
     status: "teaching",

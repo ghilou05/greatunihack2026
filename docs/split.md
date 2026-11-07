@@ -43,5 +43,8 @@ Deliverable: A lesson player that speaks AI-generated text and accepts spoken qu
 3. **Resume after Q&A** — same segment at `narration_offset_ms`.
 4. **Q&A** — P3 POSTs to P2 with optional `playback_ms` / `narration_delivered`.
 5. **Contract** — [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md); details in [team-mvp-integration-plan.md](./team-mvp-integration-plan.md).
+6. **Viewer glue** — P3 calls `onEnterToCommands`; P1 implements `executeCommands`; re-fire `on_enter` on resume after Q&A.
+7. **Right rail** — P3: voice + transcript; P1: lesson panel (upload + segment text). See plan §3.5.
+8. **PDF bytes** — `GET /documents/{id}/file` + `shared/fixtures/golden-demo.pdf`.
 
 **File-level ownership:** [team-mvp-integration-plan.md](./team-mvp-integration-plan.md) §3.

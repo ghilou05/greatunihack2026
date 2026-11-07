@@ -5,10 +5,17 @@ import uuid
 from pathlib import Path
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 
 from app.models.schemas import DocumentIndex, DocumentStatus, IngestStatus, UploadResponse
 from app.services.pdf_extract import extract_document_index
-from app.storage.local import DATA, document_index_path, load_fixture_document_index
+from app.storage.local import (
+    DATA,
+    GOLDEN_PDF_FALLBACK,
+    document_index_path,
+    document_pdf_path,
+    load_fixture_document_index,
+)
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -64,3 +71,24 @@ def get_document_index(document_id: str) -> DocumentIndex:
     if status.index is None:
         raise HTTPException(status_code=404, detail="Index not ready")
     return status.index
+
+
+@router.get("/{document_id}/file")
+def get_document_file(document_id: str) -> FileResponse:
+    """Stream PDF bytes for viewer (uploads in backend/data; demo uses golden fallback)."""
+    if document_id == DEMO_ID:
+        if GOLDEN_PDF_FALLBACK.is_file():
+            return FileResponse(
+                GOLDEN_PDF_FALLBACK,
+                media_type="application/pdf",
+                filename="golden-demo.pdf",
+            )
+        raise HTTPException(
+            status_code=404,
+            detail="Add shared/fixtures/golden-demo.pdf for doc_demo, or upload a PDF",
+        )
+
+    path = document_pdf_path(document_id)
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="PDF file not found")
+    return FileResponse(path, media_type="application/pdf", filename=f"{document_id}.pdf")

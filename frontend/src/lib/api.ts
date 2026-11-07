@@ -24,6 +24,13 @@ export async function getDocumentIndex(documentId: string): Promise<DocumentInde
   return res.json();
 }
 
+/** URL for react-pdf / pdf.js — use uploaded id or doc_demo with golden PDF on server. */
+export function getDocumentFileUrl(documentId: string): string {
+  return `${API}/documents/${documentId}/file`;
+}
+
+export const DEV_DOCUMENT_PDF = "/documents/golden-demo.pdf";
+
 export async function getLesson(lessonId: string): Promise<LessonPlan> {
   const res = await fetch(`${API}/lessons/${lessonId}`);
   if (!res.ok) throw new Error(await res.text());
