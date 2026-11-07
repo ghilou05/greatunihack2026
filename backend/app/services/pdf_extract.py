@@ -1,14 +1,33 @@
 """P2: PyMuPDF extraction → DocumentIndex."""
 
+from __future__ import annotations
+
+import logging
 from pathlib import Path
+from typing import Union
 
 import pymupdf as fitz
 
+from app.config import get_settings
+from app.errors import IngestError
 from app.models.schemas import BBox, DocumentIndex, PageMeta, Span
 
+logger = logging.getLogger("lesson.ingest")
 
-def extract_document_index(document_id: str, pdf_path: Path) -> DocumentIndex:
-    doc = fitz.open(pdf_path)
+PdfSource = Union[Path, bytes]
+
+
+def _open_pdf(source: PdfSource) -> fitz.Document:
+    try:
+        if isinstance(source, bytes):
+            return fitz.open(stream=source, filetype="pdf")
+        return fitz.open(source)
+    except Exception as exc:
+        raise IngestError(422, "Could not read PDF") from exc
+
+
+def _extract_lines(doc: fitz.Document, document_id: str) -> DocumentIndex:
+    """Core extraction loop — id/line semantics frozen for fixture compatibility."""
     pages: list[PageMeta] = []
     spans: list[Span] = []
 
@@ -53,8 +72,61 @@ def extract_document_index(document_id: str, pdf_path: Path) -> DocumentIndex:
                 )
                 line_idx += 1
 
-    doc.close()
     return DocumentIndex(document_id=document_id, pages=pages, spans=spans)
+
+
+def extract_document_index(document_id: str, source: PdfSource) -> DocumentIndex:
+    settings = get_settings()
+    doc = _open_pdf(source)
+    try:
+        if doc.needs_pass:
+            raise IngestError(422, "PDF is password-protected")
+        n_pages = doc.page_count
+        if n_pages > settings.max_pages:
+            raise IngestError(
+                422, f"PDF has {n_pages} pages; the limit is {settings.max_pages}"
+            )
+
+        index = _extract_lines(doc, document_id)
+
+        lines_per_page: dict[int, int] = {}
+        for span in index.spans:
+            lines_per_page[span.page] = lines_per_page.get(span.page, 0) + 1
+        empty_pages = [p.page for p in index.pages if lines_per_page.get(p.page, 0) == 0]
+        total_chars = sum(len(s.text) for s in index.spans)
+        n_lines = len(index.spans)
+
+        if total_chars == 0 or (n_pages and empty_pages and len(empty_pages) / n_pages > 0.5):
+            raise IngestError(
+                422,
+                "This PDF has no selectable text (scanned?). Upload a text-based PDF — OCR isn't supported yet.",
+            )
+        if total_chars < settings.min_total_chars or n_lines < settings.min_lines:
+            raise IngestError(422, "Not enough text to build a lesson")
+        if total_chars > settings.max_total_chars:
+            raise IngestError(
+                422,
+                "PDF has too much text for an MVP lesson (limit 80,000 characters)",
+            )
+
+        if empty_pages and len(empty_pages) / n_pages <= 0.5:
+            logger.info(
+                "ingest partial empty pages document_id=%s empty_pages=%s",
+                document_id,
+                empty_pages,
+            )
+
+        logger.info(
+            "ingest complete document_id=%s pages=%s line_units=%s chars=%s empty_pages=%s",
+            document_id,
+            n_pages,
+            n_lines,
+            total_chars,
+            empty_pages,
+        )
+        return index
+    finally:
+        doc.close()
 
 
 if __name__ == "__main__":

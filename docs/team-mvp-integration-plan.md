@@ -67,6 +67,8 @@ Review objections — **what must be true on day 1** vs **what can wait**.
 
 ### Person 2 — AI & lesson engine
 
+**After P2 merge:** [p2-integration-handoff.md](./p2-integration-handoff.md) (scaffold deltas, CP messages, merge conflict hints).
+
 | Owns (implement here) | Touches only for integration |
 |------------------------|------------------------------|
 | `shared/schemas/**` — propose contract changes (trio approval) | `backend/app/main.py` — CORS only if needed |
@@ -211,6 +213,8 @@ greatunihack2026/
 **Why `shared/` matters:** Most integration bugs are schema drift. P1 can build the viewer against **fixtures** before P2’s LLM is done; P3 can play audio from fixture `narration` while wiring ElevenLabs.
 
 **Scaffold status:** `shared/`, `backend/`, and `frontend/` exist with stubs. Demo IDs: `doc_demo`, `les_demo`. Backend returns fixtures until P2 implements real ingest/LLM.
+
+**P2:** [p2-solution-design.md](./p2-solution-design.md) (approved) · [p2-implementation-plan.md](./p2-implementation-plan.md)
 
 ---
 
