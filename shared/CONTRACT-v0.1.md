@@ -56,9 +56,9 @@ Changelog for the trio. Canonical JSON Schema: `schemas/*.json` (especially [les
 | Step | Owner | Function |
 |------|--------|----------|
 | `on_enter` → `ViewerCommand[]` | Shared helper (P1 file) | `onEnterToCommands()` in `viewer-commands.ts` — **P3 calls this** |
-| Apply commands to PDF | P1 | `executeCommands(commands, handlers)` |
-| Segment start / resume after Q&A | P3 | orchestrator calls `onEnterToCommands` then `executeCommands` via callback wired in `page.tsx` |
-| Q&A citation highlights | P2 response → P3 | `qa.viewer_commands` → same `executeCommands` |
+| Apply commands to PDF | P1 | `executeCommands(commands, handlers, fallbackPage)` — `handlers` is the `PdfViewerHandle` ref, `fallbackPage` is `segment.page` |
+| Segment start / resume after Q&A | P3 | orchestrator calls `onEnterToCommands` then `executeCommands(commands, handlers, fallbackPage)` via callback wired in `page.tsx` |
+| Q&A citation highlights | P2 response → P3 | `qa.viewer_commands` → same `executeCommands(commands, handlers, fallbackPage)` |
 
 ## Hour 0 (before branches)
 
