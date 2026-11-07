@@ -29,6 +29,7 @@ API smoke test:
 - `GET http://localhost:8000/health`
 - `GET http://localhost:8000/documents/doc_demo` (includes `index`)
 - `GET http://localhost:8000/documents/doc_demo/index` (index only)
+- `GET http://localhost:8000/documents/doc_demo/file` (needs `shared/fixtures/golden-demo.pdf`)
 - `GET http://localhost:8000/lessons/les_demo`
 
 ### Frontend (P1 + P3)

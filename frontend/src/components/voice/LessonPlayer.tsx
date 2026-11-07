@@ -72,7 +72,7 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
       });
       setTranscript(`${qa.answer}\n\n${qa.bridge ?? ""}`);
       handlers.onViewerCommands(qa.viewer_commands);
-      setState((s) => resumeAfterQA(s));
+      if (plan) setState((s) => resumeAfterQA(plan, s, handlers));
     } catch {
       const res = await fetch("/fixtures/sample-qa-response.json");
       const qa = await res.json();

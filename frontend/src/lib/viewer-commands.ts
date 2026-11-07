@@ -7,7 +7,8 @@ export type ViewerHandlers = {
   clearHighlights: () => void;
 };
 
-export function runViewerCommands(
+/** P1: Apply commands from P3 (and Q&A responses) to the PDF viewer. */
+export function executeCommands(
   commands: ViewerCommand[],
   handlers: ViewerHandlers
 ): void {
@@ -31,7 +32,8 @@ export function runViewerCommands(
   }
 }
 
-export function segmentOnEnterCommands(
+/** P3: Convert lesson segment `on_enter` → commands before calling `executeCommands`. */
+export function onEnterToCommands(
   onEnter: { scroll_to_span: string; highlights: string[] }
 ): ViewerCommand[] {
   return [
@@ -39,6 +41,12 @@ export function segmentOnEnterCommands(
     { type: "set_highlights", span_ids: onEnter.highlights },
   ];
 }
+
+/** @deprecated Use onEnterToCommands */
+export const segmentOnEnterCommands = onEnterToCommands;
+
+/** @deprecated Use executeCommands */
+export const runViewerCommands = executeCommands;
 
 export function lookupSpan(index: DocumentIndex, spanId: string): Span | undefined {
   return index.spans.find((s) => s.span_id === spanId);

@@ -60,7 +60,7 @@ Review objections — **what must be true on day 1** vs **what can wait**.
 |------------------------|------------------------------|
 | `frontend/src/components/pdf/**` — react-pdf viewer, scroll, bbox highlights | `frontend/src/app/page.tsx` — layout wiring |
 | `frontend/src/components/lesson/**` — upload, lesson text panel, API polling | `frontend/src/lib/api.ts` — add client methods if new routes |
-| `frontend/src/lib/viewer-commands.ts` — **execute** `ViewerCommand[]` | `shared/schemas/viewer-commands.json` — propose changes to P2 |
+| `frontend/src/lib/viewer-commands.ts` — **`executeCommands`** + shared **`onEnterToCommands`** | `shared/schemas/viewer-commands.json` — propose changes to P2 |
 | `frontend/public/**` — static assets, copy of fixtures for offline dev | |
 
 **Does not own:** `backend/app/services/*`, `frontend/src/components/voice/*`, LLM prompts, ElevenLabs keys.
@@ -112,6 +112,54 @@ Review objections — **what must be true on day 1** vs **what can wait**.
 | P3 | `feat/voice-player` | `main` |
 
 Merge **`shared/` + skeleton** first so branches rebase cleanly.
+
+---
+
+## 3.5 UI layout, viewer glue, and PDF bytes (agreed)
+
+**Resolve before parallel dev:** yes — these are integration boundaries, not extra features.
+
+### Screen wireframe
+
+```text
+┌────────────────────────────────────┬──────────────────────┐
+│  P1: PdfViewer                     │  P3: LessonPlayer    │
+│  (PDF + highlight overlays)        │  play / pause / ask    │
+│                                    │  live transcript       │
+│                                    ├──────────────────────┤
+│                                    │  P1: LessonPanel     │
+│                                    │  upload, segment list  │
+│                                    │  static lesson text    │
+└────────────────────────────────────┴──────────────────────┘
+         ▲                                      │
+         │         page.tsx wires props         │
+         └──────── executeCommands(…) ──────────┘
+```
+
+| UI block | Owner | Component | Not owned by |
+|---------|--------|-----------|--------------|
+| Left column | **P1** | `components/pdf/PdfViewer` | P3 |
+| Top-right | **P3** | `components/voice/LessonPlayer` | P1 |
+| Bottom-right | **P1** | `components/lesson/LessonPanel` | P3 (no play/pause/transcript here) |
+| Layout shell | **All** | `app/page.tsx` | — |
+
+P1 provides a **stable ref/callback** `executeCommands` bound to the viewer. P3 passes `onViewerCommands` into `LessonPlayer`; `page.tsx` connects them.
+
+### `on_enter` → viewer
+
+1. **P3** (or orchestrator) calls `onEnterToCommands(segment.on_enter)` from `frontend/src/lib/viewer-commands.ts`.
+2. **P1** implements `executeCommands(commands, handlers)` — same function for Q&A `viewer_commands`.
+3. **On resume after Q&A:** P3 calls `resumeAfterQA()` in orchestrator, which **re-fires** `onEnterToCommands` for the current segment so citation highlights are replaced by the segment’s `on_enter` set.
+
+### PDF file for the viewer
+
+| Scenario | Source |
+|----------|--------|
+| After upload | `GET /documents/{id}/file` → `backend/data/{id}.pdf` |
+| `doc_demo` / refresh | `GET /documents/doc_demo/file` if `shared/fixtures/golden-demo.pdf` exists |
+| API down | `frontend/public/documents/golden-demo.pdf` (`DEV_DOCUMENT_PDF` in `api.ts`) |
+
+Team adds **one** golden PDF to `shared/fixtures/golden-demo.pdf` (and optionally copies to `public/documents/`).
 
 ---
 
@@ -223,16 +271,21 @@ Each entry in `spans[]` is a **line-level text unit** (not a PyMuPDF font span):
 
 **`check_question`:** optional field; **not used** in MVP player (quiz flow later).
 
-### 5.3 `ViewerCommand` (P1 implements; P2/P3 only emit via plan or orchestrator)
+### 5.3 `ViewerCommand` (P1 applies; P3 converts `on_enter`)
 
-Union type P1 executes:
+Union type:
 
 - `{ "type": "scroll_to_span", "span_id": "p1_l0" }`
 - `{ "type": "scroll_to_page", "page": 3 }`
 - `{ "type": "set_highlights", "span_ids": ["p1_l0"] }`
 - `{ "type": "clear_highlights" }`
 
-P3 fires `on_enter` when a segment **starts** (not word-synced).
+**Glue (in `viewer-commands.ts`):**
+
+- `onEnterToCommands(on_enter)` — **P3 calls** at segment start and on resume after Q&A.
+- `executeCommands(commands, handlers)` — **P1 implements** `handlers` on `PdfViewer`.
+
+P2 returns ready-made `viewer_commands` on Q&A; P3 does not build those manually.
 
 ### 5.4 `LessonState` (P3 owns runtime — **frontend only**; shapes Q&A body)
 
@@ -287,6 +340,7 @@ On interrupt: `status: "paused"`, `interrupt: { "at_segment_id", "narration_offs
 | `POST` | `/documents` | P2 | Upload PDF → `document_id`, start ingest |
 | `GET` | `/documents/{id}` | P2 | Ingest status + full `DocumentIndex` in `index` when ready |
 | `GET` | `/documents/{id}/index` | P2 | Optional alias — same `DocumentIndex` body (P1 convenience) |
+| `GET` | `/documents/{id}/file` | P2 | PDF bytes for viewer (`doc_demo` → golden fixture) |
 | `POST` | `/documents/{id}/lessons` | P2 | Generate `LessonPlan` (idempotent: same doc → cache) |
 | `GET` | `/lessons/{id}` | P2 | Fetch plan + document_id |
 | `POST` | `/lessons/{id}/qa` | P2 | Grounded interrupt answer |

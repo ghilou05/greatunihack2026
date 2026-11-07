@@ -26,3 +26,10 @@ def document_index_path(document_id: str) -> Path:
 def lesson_plan_path(lesson_id: str) -> Path:
     DATA.mkdir(parents=True, exist_ok=True)
     return DATA / f"{lesson_id}.lesson.json"
+
+
+def document_pdf_path(document_id: str) -> Path:
+    return DATA / f"{document_id}.pdf"
+
+
+GOLDEN_PDF_FALLBACK = FIXTURES / "golden-demo.pdf"
