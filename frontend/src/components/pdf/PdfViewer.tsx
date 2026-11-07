@@ -1,61 +1,35 @@
 "use client";
 
 /**
- * P1: PDF.js / react-pdf viewer, scroll, execute ViewerCommand handlers.
+ * Public entry point for the PDF viewer. pdf.js touches browser globals on
+ * import, so the implementation is only ever loaded on the client.
+ *
+ * The ref is null until that chunk has loaded. The parent must give the viewer
+ * a definite height, because it scrolls inside its own container.
  */
-import { HighlightLayer } from "@/components/pdf/HighlightLayer";
-import { useCallback, useState } from "react";
-import type { DocumentIndex } from "@/lib/types";
+import dynamic from "next/dynamic";
+import { forwardRef } from "react";
+import type { PdfViewerHandle, PdfViewerProps } from "./PdfViewerClient";
 
-type Props = {
-  documentId: string;
-};
+export type { PdfViewerHandle, PdfViewerProps };
 
-export function PdfViewer({ documentId }: Props) {
-  const [index, setIndex] = useState<DocumentIndex | null>(null);
-  const [highlightSpanIds, setHighlightSpanIds] = useState<string[]>([]);
+const PdfViewerClient = dynamic(() => import("./PdfViewerClient"), {
+  ssr: false,
+  loading: () => <p>Loading viewer…</p>,
+});
 
-  const handlers = {
-    scrollToSpan: (spanId: string) => {
-      console.info("[P1] scroll_to_span", spanId);
-    },
-    scrollToPage: (page: number) => {
-      console.info("[P1] scroll_to_page", page);
-    },
-    setHighlights: (spanIds: string[]) => setHighlightSpanIds(spanIds),
-    clearHighlights: () => setHighlightSpanIds([]),
-  };
+/**
+ * TEMPORARY: app/page.tsx still passes the scaffold's `documentId`. Delete this
+ * type and the branch below once page.tsx passes `file` and `index`.
+ */
+type ScaffoldProps = { documentId: string };
 
-  const loadDemoIndex = useCallback(async () => {
-    const res = await fetch("/fixtures/sample-document-index.json");
-    const data = (await res.json()) as DocumentIndex;
-    setIndex(data);
-  }, []);
-
-  return (
-    <section
-      style={{
-        background: "var(--panel)",
-        borderRadius: 12,
-        padding: "1rem",
-        minHeight: 480,
-      }}
-    >
-      <header style={{ display: "flex", justifyContent: "space-between" }}>
-        <h2 style={{ margin: 0, fontSize: "1.1rem" }}>PDF (P1)</h2>
-        <span style={{ color: "var(--muted)", fontSize: "0.85rem" }}>
-          {documentId}
-        </span>
-      </header>
-      <p style={{ color: "var(--muted)", fontSize: "0.9rem" }}>
-        Wire react-pdf here. Load fixture index until upload flow works.
-      </p>
-      <button type="button" onClick={loadDemoIndex}>
-        Load demo document index
-      </button>
-      {index && (
-        <HighlightLayer index={index} highlightSpanIds={highlightSpanIds} />
-      )}
-    </section>
-  );
-}
+export const PdfViewer = forwardRef<
+  PdfViewerHandle,
+  PdfViewerProps | ScaffoldProps
+>(function PdfViewer(props, ref) {
+  if ("documentId" in props) {
+    return <p>PDF viewer not wired up yet ({props.documentId}).</p>;
+  }
+  return <PdfViewerClient {...props} viewerRef={ref} />;
+});
