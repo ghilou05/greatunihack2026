@@ -4,16 +4,23 @@
  * P1: PDF.js / react-pdf viewer, scroll, execute ViewerCommand handlers.
  */
 import { HighlightLayer } from "@/components/pdf/HighlightLayer";
-import { useCallback, useState } from "react";
-import type { DocumentIndex } from "@/lib/types";
+import { useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
+import type { DocumentIndex, ViewerCommand } from "@/lib/types";
+import { executeCommands, normalizeViewerCommands } from "@/lib/viewer-commands";
+
+export type PdfViewerHandle = {
+  receiveCommands: (commands: ViewerCommand[], fallbackPage: number) => void;
+};
 
 type Props = {
   documentId: string;
+  ref?: React.Ref<PdfViewerHandle>;
 };
 
-export function PdfViewer({ documentId }: Props) {
+export function PdfViewer({ documentId, ref }: Props) {
   const [index, setIndex] = useState<DocumentIndex | null>(null);
   const [highlightSpanIds, setHighlightSpanIds] = useState<string[]>([]);
+  const pendingCommands = useRef<{ commands: ViewerCommand[]; fallbackPage: number }[]>([]);
 
   const handlers = {
     scrollToSpan: (spanId: string) => {
@@ -31,6 +38,27 @@ export function PdfViewer({ documentId }: Props) {
     const data = (await res.json()) as DocumentIndex;
     setIndex(data);
   }, []);
+
+  useEffect(() => {
+    if (documentId === "doc_demo") void loadDemoIndex();
+  }, [documentId, loadDemoIndex]);
+
+  useImperativeHandle(ref, () => ({
+    receiveCommands: (commands, fallbackPage) => {
+      if (!index) {
+        pendingCommands.current.push({ commands, fallbackPage });
+        return;
+      }
+      executeCommands(normalizeViewerCommands(commands, index, fallbackPage), handlers);
+    },
+  }));
+
+  useEffect(() => {
+    if (!index) return;
+    for (const { commands, fallbackPage } of pendingCommands.current.splice(0)) {
+      executeCommands(normalizeViewerCommands(commands, index, fallbackPage), handlers);
+    }
+  }, [index]);
 
   return (
     <section

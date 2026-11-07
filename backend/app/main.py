@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.api import documents, health, lessons, qa, voice
 from app.config import get_settings
 from app.errors import register_error_handlers
+
 
 _settings = get_settings()
 _settings.data_dir.mkdir(parents=True, exist_ok=True)
@@ -24,4 +24,3 @@ app.include_router(health.router)
 app.include_router(documents.router)
 app.include_router(lessons.router)
 app.include_router(qa.router)
-app.include_router(voice.router)

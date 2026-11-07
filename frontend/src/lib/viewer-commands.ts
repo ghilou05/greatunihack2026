@@ -72,7 +72,7 @@ export function normalizeViewerCommands(
     }
     if (cmd.type === "set_highlights") {
       const valid = cmd.span_ids.filter((id) => lookupSpan(index, id));
-      if (valid.length) out.push({ type: "set_highlights", span_ids: valid });
+      out.push({ type: "set_highlights", span_ids: valid });
       continue;
     }
     out.push(cmd);
