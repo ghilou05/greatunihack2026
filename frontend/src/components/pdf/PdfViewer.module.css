@@ -1,0 +1,53 @@
+.container {
+  position: relative;
+  height: 100%;
+  padding: 12px;
+  overflow-y: auto;
+  /* Stops the scrollbar appearing from changing the page width. */
+  scrollbar-gutter: stable;
+  background: #3a3d44;
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.page {
+  position: relative;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5; /* Above the react-pdf text layer. */
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.highlight {
+  position: absolute;
+  background: rgba(255, 214, 0, 0.4);
+  border-radius: 2px;
+  animation: highlightFadeIn 200ms ease-out;
+}
+
+.spanOutline {
+  position: absolute;
+  /* Drawn inside the box so it shows the exact bbox edge. */
+  outline: 1px solid rgba(230, 0, 90, 0.7);
+  outline-offset: -1px;
+}
+
+@keyframes highlightFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
