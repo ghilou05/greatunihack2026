@@ -11,6 +11,26 @@
         "lesson_id": { "type": "string" },
         "segment_id": { "type": "string" },
         "question": { "type": "string" },
+        "playback_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Position in segment narration when user interrupted"
+        },
+        "narration_delivered": {
+          "type": "string",
+          "description": "Prefix of segment.narration already spoken"
+        },
+        "qa_turns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["question", "answer"],
+            "properties": {
+              "question": { "type": "string" },
+              "answer": { "type": "string" }
+            }
+          }
+        },
         "max_cite_spans": { "type": "integer", "minimum": 1, "default": 5 }
       }
     },

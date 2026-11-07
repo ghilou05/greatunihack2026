@@ -4,12 +4,18 @@
  * P3: ElevenLabs TTS/STT, segment state machine, interrupt + resume.
  */
 import { getLesson, postLessonQA } from "@/lib/api";
-import { segmentOnEnterCommands } from "@/lib/viewer-commands";
+import {
+  captureInterrupt,
+  resumeAfterQA,
+  startSegment,
+} from "@/lib/lesson-orchestrator";
+import type { ViewerCommand } from "@/lib/types";
 import { useEffect, useState } from "react";
 import type { LessonPlan, LessonState } from "@/lib/types";
 
 type Props = {
   lessonId: string;
+  onViewerCommands?: (commands: ViewerCommand[]) => void;
 };
 
 const initialState = (lessonId: string): LessonState => ({
@@ -17,11 +23,10 @@ const initialState = (lessonId: string): LessonState => ({
   status: "idle",
   segment_id: null,
   segment_index: 0,
-  open_loops: [],
   interrupt: null,
 });
 
-export function LessonPlayer({ lessonId }: Props) {
+export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
   const [plan, setPlan] = useState<LessonPlan | null>(null);
   const [state, setState] = useState<LessonState>(() => initialState(lessonId));
   const [transcript, setTranscript] = useState("");
@@ -35,36 +40,44 @@ export function LessonPlayer({ lessonId }: Props) {
       });
   }, [lessonId]);
 
+  const handlers = {
+    onViewerCommands: (commands: ViewerCommand[]) => {
+      onViewerCommands?.(commands);
+      console.info("[P3] viewer commands → P1", commands);
+    },
+    onTranscript: setTranscript,
+  };
+
   const playSegment = (index: number) => {
-    if (!plan || !plan.segments[index]) return;
-    const seg = plan.segments[index];
-    setState({
-      ...state,
-      status: "teaching",
-      segment_id: seg.id,
-      segment_index: index,
-    });
-    setTranscript(seg.narration);
-    const cmds = segmentOnEnterCommands(seg.on_enter);
-    console.info("[P3] on_enter → P1 viewer", cmds);
-    // TODO(P3): TTS(seg.narration); onSegmentStart → window dispatch or callback to PdfViewer
+    if (!plan) return;
+    const { state: next } = startSegment(plan, index, handlers);
+    setState(next);
+    // TODO(P3): TTS from narration; track playback_ms for interrupt
   };
 
   const interruptDemo = async () => {
     if (!plan || state.segment_id == null) return;
-    setState({ ...state, status: "paused" });
+    const seg = plan.segments[state.segment_index];
+    const delivered = seg.narration.slice(0, Math.min(60, seg.narration.length));
+    const offsetMs = 8000;
+    setState(captureInterrupt(state, offsetMs, delivered));
     try {
       const qa = await postLessonQA(lessonId, {
         lesson_id: lessonId,
         segment_id: state.segment_id,
         question: "Why does water move?",
+        playback_ms: offsetMs,
+        narration_delivered: delivered,
+        qa_turns: [],
       });
       setTranscript(`${qa.answer}\n\n${qa.bridge ?? ""}`);
-      console.info("[P3] qa viewer_commands → P1", qa.viewer_commands);
+      handlers.onViewerCommands(qa.viewer_commands);
+      setState((s) => resumeAfterQA(s));
     } catch {
       const res = await fetch("/fixtures/sample-qa-response.json");
       const qa = await res.json();
       setTranscript(qa.answer);
+      handlers.onViewerCommands(qa.viewer_commands);
     }
   };
 
@@ -79,6 +92,9 @@ export function LessonPlayer({ lessonId }: Props) {
       <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>Voice (P3)</h2>
       <p style={{ color: "var(--muted)", fontSize: "0.85rem" }}>
         Status: {state.status} · segment {state.segment_index}
+        {state.interrupt
+          ? ` · resume @ ${state.interrupt.narration_offset_ms}ms`
+          : ""}
       </p>
       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
         <button type="button" onClick={() => playSegment(0)}>

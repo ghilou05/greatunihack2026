@@ -21,4 +21,6 @@ Tech stack:
 
 - NextJS for front end
 - FastAPI for backend
-- Supabase for database
+- Supabase for database (post-MVP; local disk for hackathon)
+
+**MVP contract & team split:** [team-mvp-integration-plan.md](./team-mvp-integration-plan.md), [split.md](./split.md), [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).

@@ -22,10 +22,11 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["span_id", "page", "text", "bbox"],
+        "required": ["span_id", "unit_kind", "page", "text", "bbox"],
         "properties": {
-          "span_id": { "type": "string" },
-          "page": { "type": "integer", "minimum": 1 },
+          "span_id": { "type": "string", "description": "Line-level unit id, e.g. p1_l0" },
+          "unit_kind": { "type": "string", "enum": ["line"] },
+          "page": { "type": "integer", "minimum": 1, "description": "1-based page number" },
           "text": { "type": "string" },
           "bbox": {
             "type": "object",

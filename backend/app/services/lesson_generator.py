@@ -1,4 +1,7 @@
-"""P2: Build LessonPlan from DocumentIndex (LLM + validation)."""
+"""P2: Build LessonPlan from DocumentIndex (LLM + validation).
+
+Segments: ~15–30s narration, 2–4 sentences, cues=[] until timed highlights exist.
+"""
 
 import json
 

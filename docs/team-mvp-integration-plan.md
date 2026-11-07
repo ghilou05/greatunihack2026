@@ -14,7 +14,7 @@ Team alignment doc for **Person 1 (frontend/PDF)**, **Person 2 (LLM/lesson engin
 | [HackNYU Agora](https://github.com/harshagarwalnyu/HackNYU-Agora) | Explicit **pedagogy / lesson states**; RAG on uploaded material | LangGraph + Qdrant + Docling in one hack — too heavy unless ingestion is already done |
 | [ReadAble](https://devpost.com/software/readable-7r1eu2) / [Aha](https://devpost.com/software/aha-ze2hqg) | **Structured JSON** from LLM with retries; optional **clause splits** for later TTS sync | Word-level highlight timing unless P3 has ElevenLabs timestamps working |
 
-**Hackathon bottom line (P2):** Ship **offline `LessonPlan` + span index + grounded Q&A API**. Let P3 own playback state; let P1 own executing `ViewerCommand`s. Do **segment-level** highlight (one scroll + highlight set per segment), not clause-level sync.
+**Hackathon bottom line (P2):** Ship **offline `LessonPlan` + line-level document index + grounded Q&A API**. P3 owns **browser** playback state; P1 executes `ViewerCommand`s. MVP: **`on_enter`** highlight only (empty `cues`), not clause-level sync.
 
 ---
 
@@ -23,6 +23,30 @@ Team alignment doc for **Person 1 (frontend/PDF)**, **Person 2 (LLM/lesson engin
 > User uploads a PDF → backend builds a **cached lesson** → user presses play → voice reads each segment’s `narration` while the viewer runs `on_enter` → user can **pause, ask a question**, get a **cited** answer → **resume** the same segment index.
 
 Everything else in [features.md](./features.md) is **bonus** (accounts, Supabase history, streaks, annotations beyond highlight).
+
+---
+
+## 2.1 Architecture decisions (resolve before coding)
+
+Review objections — **what must be true on day 1** vs **what can wait**.
+
+| Topic | **Decision for this hackathon** | Satisfy **now**? | Owner |
+|--------|----------------------------------|------------------|--------|
+| **Where orchestrator runs** | **Browser-only TypeScript** (`frontend/src/lib/lesson-orchestrator.ts` + `useLessonSession`). Backend = **REST only** (upload, index, plan, Q&A). No WebSocket unless you finish MVP early and want polish. | **Yes** — agree in stand-up; no server-side lesson FSM. | P3 |
+| **`LessonState`** | Lives **only in frontend memory** (Zustand/context/hook). Not stored on server in MVP. | **Yes** — schema is a **TypeScript contract**, not a backend model. | P3 |
+| **Resume after interrupt** | Store `narration_offset_ms` (and optionally `narration_delivered` text) in `interrupt`. Resume TTS from that offset, not from segment start. | **Schema now**; ElevenLabs seek implementation **hour 2–3**. | P3 |
+| **Q&A context** | `POST /lessons/{id}/qa` accepts optional `narration_delivered`, `playback_ms`, `qa_turns[]` so answers match what was just said. | **Schema + types now**; P2 uses fields when wiring RAG. | P2 + P3 |
+| **Text units for highlights** | **One PyMuPDF line → one `span_id`** (union bbox). IDs like `p1_l0`. Field name stays `span_id` for stable API; `unit_kind: "line"` on each unit. **Not** raw font spans. | **Yes** — P2 changes `pdf_extract.py` (done in scaffold). | P2 |
+| **Segment length** | Target **15–30s** narration per segment (~2–4 sentences) so static highlights feel OK. | **Yes** — lesson prompt constraint. | P2 |
+| **Mid-segment highlight sync** | MVP: `on_enter` only at segment start. **V1+:** optional `cues[]` on segment (char offsets + commands) with ElevenLabs timestamps. | **Defer cues**; optional empty `cues` in schema for forward compat. | P2 later / P3 later |
+| **`DocumentIndex` to browser** | `GET /documents/{id}` returns `{ status, index }` when ready. P1 caches index client-side for viewer + highlight lookup. Optional alias `GET /documents/{id}/index` = same payload. | **Yes** — document in API §6; P1 polls after upload. | P1 + P2 |
+| **Page numbers** | **1-based** everywhere (PyMuPDF `page_idx + 1`). | **Yes** — already in extractor. | P2 |
+| **`open_loops`** | Topics to revisit later in the lesson — **post-MVP**. Omit from runtime state for hackathon. | **Drop from MVP state** (schema optional / docs only). | — |
+| **`check_question`** | Optional end-of-segment micro-check — **post-MVP** (no auto-quiz flow in 4h). | Keep on `LessonSegment` as nullable, ignore in player. | — |
+| **Invalid `span_id`** | No fuzzy matching: unknown ID → **`scroll_to_page`** for that segment’s first known page. | **Yes** — P1 `viewer-commands.ts`. | P1 |
+| **TTS / STT API** | ElevenLabs (or browser STT) called **from frontend** in MVP. `backend/app/api/voice.py` is optional proxy if keys must be hidden. | **No new shared schema** until you move TTS server-side. | P3 |
+
+**Bottom line:** Claude’s orchestrator-on-server concern is valid — **reject server orchestrator for MVP**. The rest is mostly **schema clarity + shorter segments + line units + resume offset**; word-level `cues` and `open_loops` do **not** block start.
 
 ---
 
@@ -63,6 +87,7 @@ Everything else in [features.md](./features.md) is **bonus** (accounts, Supabase
 | Owns (implement here) | Touches only for integration |
 |------------------------|------------------------------|
 | `frontend/src/components/voice/**` — TTS/STT, transcript, play/pause/interrupt | `frontend/src/app/page.tsx` — pass viewer command callback to P1 |
+| `frontend/src/lib/lesson-orchestrator.ts` — **browser** FSM: teach / pause / qa / resume | |
 | `frontend/src/hooks/useLessonSession.ts` — segment state + command bus to P1 | |
 | `backend/app/api/voice.py` — optional server-side ElevenLabs proxy | `frontend/src/lib/api.ts` — voice-specific endpoints only |
 | Runtime **`LessonState`** (in React state or small store); **not** persisted in MVP unless agreed | `shared/schemas/lesson-state.json` — propose fields to trio |
@@ -91,8 +116,6 @@ Merge **`shared/` + skeleton** first so branches rebase cleanly.
 ---
 
 ## 4. Repo layout (scaffolded on `main`)
-
-Single repo, three branches merging to `main`. **Shared contracts live on `main` first** (or a short-lived `contracts` branch merged before feature work).
 
 Single repo, three branches merging to `main`. **Shared contracts live on `main` first** (or a short-lived `contracts` branch merged before feature work).
 
@@ -146,7 +169,9 @@ greatunihack2026/
 
 ### 5.1 `DocumentIndex` (P2 produces, P1 consumes for highlights)
 
-Minimum fields per span:
+**Delivery:** `GET /documents/{document_id}` → `index` when `status: ready`. P1 stores this for the session (highlights + scroll).
+
+Each entry in `spans[]` is a **line-level text unit** (not a PyMuPDF font span):
 
 ```json
 {
@@ -154,18 +179,21 @@ Minimum fields per span:
   "pages": [{ "page": 1, "width": 612, "height": 792 }],
   "spans": [
     {
-      "span_id": "p1_s0",
+      "span_id": "p1_l0",
+      "unit_kind": "line",
       "page": 1,
-      "text": "Osmosis is...",
-      "bbox": { "x0": 72, "y0": 120, "x1": 400, "y1": 136 }
+      "text": "Osmosis is the net movement of water...",
+      "bbox": { "x0": 72, "y0": 120, "x1": 520, "y1": 136 }
     }
   ]
 }
 ```
 
-**Team decision:** PDF user space coords (PyMuPDF default) vs normalized 0–1. **Pick PyMuPDF rect and document in README** — P1 transforms using pdf.js viewport scale.
+**Pages:** **1-indexed** (first page = `1`).
 
-**Fallback rule:** If highlight fails fuzzy match, `scroll_to_page` only (no silent wrong box).
+**Coords:** PyMuPDF user space; P1 scales via pdf.js viewport.
+
+**Fallback rule:** Unknown `span_id` → `scroll_to_page` for the segment’s primary page (no fuzzy match).
 
 ### 5.2 `LessonPlan` (P2 produces, P3 reads, P1 uses `on_enter`)
 
@@ -178,33 +206,35 @@ Minimum fields per span:
     {
       "id": "seg_01",
       "goal": "Define osmosis",
-      "span_ids": ["p1_s0", "p1_s1"],
+      "span_ids": ["p1_l0", "p1_l1"],
       "narration": "We'll start with osmosis...",
       "on_enter": {
-        "scroll_to_span": "p1_s0",
-        "highlights": ["p1_s0", "p1_s1"]
+        "scroll_to_span": "p1_l0",
+        "highlights": ["p1_l0", "p1_l1"]
       },
-      "check_question": null,
+      "cues": [],
       "next": "seg_02"
     }
   ]
 }
 ```
 
-**MVP cap:** 5–12 segments, ~30–90s narration each (hackathon PDF = a few pages, not a whole textbook).
+**MVP cap:** 5–12 segments, **~15–30s narration each** (2–4 sentences). `cues[]` optional — empty in MVP; future: `{ "at_ms": 1200, "commands": [...] }` for ElevenLabs sync.
+
+**`check_question`:** optional field; **not used** in MVP player (quiz flow later).
 
 ### 5.3 `ViewerCommand` (P1 implements; P2/P3 only emit via plan or orchestrator)
 
 Union type P1 executes:
 
-- `{ "type": "scroll_to_span", "span_id": "p1_s0" }`
+- `{ "type": "scroll_to_span", "span_id": "p1_l0" }`
 - `{ "type": "scroll_to_page", "page": 3 }`
-- `{ "type": "set_highlights", "span_ids": ["p1_s0"] }`
+- `{ "type": "set_highlights", "span_ids": ["p1_l0"] }`
 - `{ "type": "clear_highlights" }`
 
 P3 fires `on_enter` when a segment **starts** (not word-synced).
 
-### 5.4 `LessonState` (P3 owns runtime; P2 reads for Q&A)
+### 5.4 `LessonState` (P3 owns runtime — **frontend only**; shapes Q&A body)
 
 ```json
 {
@@ -212,20 +242,22 @@ P3 fires `on_enter` when a segment **starts** (not word-synced).
   "status": "teaching",
   "segment_id": "seg_01",
   "segment_index": 0,
-  "open_loops": [],
   "interrupt": null
 }
 ```
 
-On interrupt: `status: "paused"`, store `interrupt: { "question", "at_segment_id" }`. After Q&A: P3 sets `status: "teaching"` and same `segment_id` (or `segment_index + 1` if team chooses “skip ahead” — **pick one default: resume same segment**).
+On interrupt: `status: "paused"`, `interrupt: { "at_segment_id", "narration_offset_ms", "narration_delivered" }`. After Q&A: resume **same segment** at `narration_offset_ms` (TTS seek or replay substring).
 
-**Q&A request** (P3 → P2):
+**Q&A request** (P3 → P2 via HTTP):
 
 ```json
 {
   "lesson_id": "les_xyz",
   "segment_id": "seg_01",
   "question": "Why does water move?",
+  "playback_ms": 12500,
+  "narration_delivered": "We'll start with osmosis. Water moves when...",
+  "qa_turns": [],
   "max_cite_spans": 5
 }
 ```
@@ -235,10 +267,10 @@ On interrupt: `status: "paused"`, store `interrupt: { "question", "at_segment_id
 ```json
 {
   "answer": "...",
-  "cite_span_ids": ["p1_s1"],
+  "cite_span_ids": ["p1_l1"],
   "viewer_commands": [
-    { "type": "scroll_to_span", "span_id": "p1_s1" },
-    { "type": "set_highlights", "span_ids": ["p1_s1"] }
+    { "type": "scroll_to_span", "span_id": "p1_l1" },
+    { "type": "set_highlights", "span_ids": ["p1_l1"] }
   ],
   "bridge": "Back to the membrane..."
 }
@@ -253,32 +285,33 @@ On interrupt: `status: "paused"`, store `interrupt: { "question", "at_segment_id
 | Method | Path | Owner | Purpose |
 |--------|------|-------|---------|
 | `POST` | `/documents` | P2 | Upload PDF → `document_id`, start ingest |
-| `GET` | `/documents/{id}` | P2 | Ingest status + `DocumentIndex` when ready |
+| `GET` | `/documents/{id}` | P2 | Ingest status + full `DocumentIndex` in `index` when ready |
+| `GET` | `/documents/{id}/index` | P2 | Optional alias — same `DocumentIndex` body (P1 convenience) |
 | `POST` | `/documents/{id}/lessons` | P2 | Generate `LessonPlan` (idempotent: same doc → cache) |
 | `GET` | `/lessons/{id}` | P2 | Fetch plan + document_id |
 | `POST` | `/lessons/{id}/qa` | P2 | Grounded interrupt answer |
 | `GET` | `/health` | anyone | CI + integration check |
 
-P3 may add `/lessons/{id}/tts` later; **MVP:** P3 calls ElevenLabs from frontend or backend with `segment.narration` text — no P2 change required.
+**Voice (out of REST contract for MVP):** P3 calls ElevenLabs from the **browser** with `segment.narration` / Q&A `answer`. Server proxy only if hiding API keys — not required for integration test.
 
 **CORS:** P2 enables frontend origin on day one.
 
 ---
 
-## 7. Pre-development agreements (~20–30 min, do this now)
+## 7. Agreed checklist (v0.1 — locked)
 
-Checklist — every person says yes/no:
+Full contract summary: [shared/CONTRACT-v0.1.md](../shared/CONTRACT-v0.1.md).
 
-1. **Golden PDF:** One 2–5 page lecture PDF everyone tests on (named file in `shared/fixtures/`).
-2. **Schema version:** `shared/schemas/*` v0.1 frozen for 2 hours; changes only via quick trio huddle.
-3. **Coord system:** PyMuPDF bboxes + P1 scale math — documented in `shared/README.md` (one paragraph).
-4. **Segment sync level:** Segment-level highlight at segment start (not word-level).
-5. **Resume semantics:** After Q&A, replay remainder of segment narration or skip to next — **default: resume from start of segment** (simplest).
-6. **LLM provider:** OpenAI model names + who holds API key (env var `OPENAI_API_KEY` in backend only).
-7. **Voice stack:** ElevenLabs STT/TTS on P3; P2 returns text only.
-8. **Database:** Supabase optional for hackathon; **default local disk** for PDF + JSON cache to save time.
-9. **Branch strategy:** PRs to `main` only for `shared/` + `backend` skeleton; feature branches per person.
-10. **Integration times:** T+90 min and T+180 min — 15 min merge + smoke test (upload → plan → play one segment → one question).
+1. **Golden PDF:** One 2–5 page lecture PDF in `shared/fixtures/` — **add before integration test**.
+2. **Schema version:** `shared/schemas/*` **v0.1** — changes only via trio huddle.
+3. **Text units:** **Line-level** ids `p{n}_l{i}`; see `shared/README.md`.
+4. **Segment sync:** `on_enter` at segment start only; `cues[]` empty in MVP.
+5. **Resume:** Same segment at **`narration_offset_ms`** after Q&A.
+6. **Orchestrator:** **Browser only** — no server lesson FSM / WebSocket for MVP.
+7. **LLM:** OpenAI on backend (`OPENAI_API_KEY`); P2 returns text; P3 does ElevenLabs in browser.
+8. **Storage:** Local disk under `backend/data/`; Supabase post-MVP.
+9. **Branches:** Per-person feature branches → `main`; scaffold already on repo.
+10. **Integration checkpoints:** T+90 min & T+180 min smoke tests.
 
 ---
 
@@ -294,7 +327,7 @@ Checklist — every person says yes/no:
 
 - P1: `fetch('/lessons/demo')` → static JSON in `public/` until backend ready.
 - P3: Same fixture; fake Q&A response JSON for UI flow.
-- P2: CLI `python -m app.services.pdf_extract fixtures/sample.pdf` prints span count.
+- P2: CLI `python -m app.services.pdf_extract path/to.pdf` prints line-unit count.
 
 ---
 
@@ -302,9 +335,9 @@ Checklist — every person says yes/no:
 
 ### Ingestion (no LLM)
 
-1. PyMuPDF: per page, `get_text("dict")` → spans with bbox + text.
-2. Assign stable `span_id` = `p{page}_s{index}`.
-3. Drop empty spans; merge tiny fragments if needed (optional).
+1. PyMuPDF: per page, `get_text("dict")` → **one unit per line** (union bbox + joined text).
+2. Assign `span_id` = `p{page}_l{index}`, `unit_kind: "line"` (page **1-based**).
+3. Drop empty lines.
 
 ### Lesson generation (one LLM call, structured output)
 
@@ -314,7 +347,8 @@ Checklist — every person says yes/no:
 
 - Output must match `lesson-plan.json` schema.
 - Every `span_id` in output must exist in `DocumentIndex` (validate in code; retry once on failure).
-- Narration: conversational, 2–4 sentences per segment.
+- Narration: conversational, 2–4 sentences per segment (**~15–30 seconds** when spoken).
+- Every segment includes `"cues": []` until timed highlights exist.
 - Teaching order follows document order unless PDF is obviously appendix-first.
 
 **Model:** cheaper/faster for plan (`gpt-4o-mini` or equivalent); same or better for Q&A.
@@ -323,8 +357,9 @@ Checklist — every person says yes/no:
 
 **Context assembly:**
 
-- Current segment `goal`, `narration`, `span_ids`.
-- Retrieved chunks: spans in segment + top-k similar spans from full doc (embeddings optional MVP: keyword overlap or full-doc truncate if &lt; 8k tokens).
+- Current segment `goal`, full `narration`, `span_ids`.
+- Request fields: `narration_delivered`, `playback_ms`, `qa_turns` when present.
+- Retrieved chunks: line units in segment + top-k from doc (embeddings optional MVP).
 
 **Grounding rule:** If no span supports answer, return `"I don't see that in this document"` and empty `cite_span_ids`.
 
@@ -349,11 +384,11 @@ Checklist — every person says yes/no:
 ## 11. Smoke test script (end of hackathon)
 
 1. Upload golden PDF.
-2. Wait for `DocumentIndex` (N spans &gt; 0).
+2. Wait for `DocumentIndex` (N line units &gt; 0).
 3. Generate lesson (≥ 3 segments).
 4. Play segment 0: hear audio + see highlight on expected page.
 5. Interrupt with question answerable from PDF → see citation highlight.
-6. Resume: segment continues or restarts per agreed rule.
+6. Resume: same segment from saved offset (not from segment start).
 7. Advance to segment 1 manually.
 
 ---
@@ -371,13 +406,17 @@ Checklist — every person says yes/no:
 
 ---
 
-## 13. Open decisions for trio (resolve in first 30 min)
+## 13. Resolved decisions
 
-1. Monorepo `frontend/` + `backend/` on `main` skeleton — who commits initial scaffold?
-2. Resume same segment vs continue from pause point?
-3. Single FastAPI process for P2+P3 vs split — **recommend single `backend/`** process.
-4. Embed Supabase now or post-MVP?
-5. Maximum PDF pages for demo (suggest **≤ 10**).
+| # | Decision |
+|---|----------|
+| 1 | Monorepo scaffold on repo — **done** |
+| 2 | Resume same segment at **`narration_offset_ms`** |
+| 3 | Single `backend/` process; **orchestrator not on server** |
+| 4 | **No Supabase** in MVP — local disk |
+| 5 | Demo PDF **≤ 10 pages** |
+| 6 | Highlight units = **lines** (`p{n}_l{i}`) |
+| 7 | TTS/STT **out of REST contract** (browser ElevenLabs) |
 
 ---
 

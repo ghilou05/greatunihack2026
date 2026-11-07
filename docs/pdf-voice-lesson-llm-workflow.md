@@ -39,6 +39,8 @@ People have already shipped close cousins:
 
 Split **offline preparation** from **live runtime**. The LLM workflow lives mostly in prep + a small runtime state machine.
 
+**Team MVP (GreatUniHack):** orchestrator runs in the **browser** (P3); backend is **REST** only (ingest, lesson plan, Q&A). See [team-mvp-integration-plan.md](./team-mvp-integration-plan.md) §2.1.
+
 ```mermaid
 flowchart TB
   subgraph ingest [Ingestion - once per PDF]
@@ -76,7 +78,7 @@ flowchart TB
    - `bbox` (PDF coords → screen via viewport),
    - optional `section_path` (“Chapter 2 / Mitosis”).
 3. **Chunk for RAG** — but chunks must **reference `span_id`s**, not loose text only (same idea as Jill Watson keyword → highlight in [2501.03618](https://arxiv.org/html/2501.03618)).
-4. **LLM pass: `LessonPlan`** (batch, cheap model is fine):
+4. **LLM pass: `LessonPlan`** (batch, cheap model is fine). Example uses generic ids; **hackathon MVP** uses line ids `p{n}_l{i}`, empty `cues`, browser orchestrator — see [team-mvp-integration-plan.md](./team-mvp-integration-plan.md).
 
 ```json
 {
@@ -85,14 +87,13 @@ flowchart TB
     {
       "id": "seg_01",
       "goal": "Define osmosis",
-      "span_ids": ["p3_s12", "p3_s13"],
+      "span_ids": ["p3_l12", "p3_l13"],
       "narration": "We'll start with the cell membrane...",
-      "on_enter": { "scroll_to": "p3_s12", "highlights": ["p3_s12", "p3_s13"] },
-      "check_question": "optional micro-check",
+      "on_enter": { "scroll_to_span": "p3_l12", "highlights": ["p3_l12", "p3_l13"] },
+      "cues": [],
       "next": "seg_02"
     }
-  ],
-  "open_loops": []
+  ]
 }
 ```
 
