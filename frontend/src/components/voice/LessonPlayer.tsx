@@ -6,11 +6,11 @@
 import { getLesson, postLessonQA } from "@/lib/api";
 import { ElevenLabsPlayer } from "@/lib/elevenlabs-tts";
 import { useLessonSession } from "@/hooks/useLessonSession";
+import styles from "./LessonPlayer.module.css";
 import { MicrophoneButton } from "@/components/voice/MicrophoneButton";
 import { onEnterToCommands } from "@/lib/viewer-commands";
 import {
   captureInterrupt,
-  resumeAfterQA,
   startSegment,
 } from "@/lib/lesson-orchestrator";
 import type { LessonSegment, QAResponse, ViewerCommand } from "@/lib/types";
@@ -27,6 +27,7 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
   const { state, setState, playbackStatus, setPlaybackStatus, question, handleQuestion } = useLessonSession(lessonId);
   const [transcript, setTranscript] = useState("");
   const [listening, setListening] = useState(false);
+  const [microphoneSession, setMicrophoneSession] = useState(0);
   const [voiceError, setVoiceError] = useState<string | null>(null);
   const [answer, setAnswer] = useState<QAResponse | null>(null);
   const [qaStatus, setQAStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
@@ -105,23 +106,6 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
     return voicePlayer.current;
   };
 
-  const testVoice = async () => {
-    const attempt = ++voiceAttempt.current;
-    cueRef.current = null;
-    cuesSuspended.current = true;
-    activeSegment.current = -1;
-    setVoiceError(null);
-    setPlaybackStatus("loading");
-    try {
-      await player().speak("Welcome to your lesson on Newton's laws.");
-      if (attempt === voiceAttempt.current && voicePlayer.current?.hasAudio) setPlaybackStatus("playing");
-    } catch (error) {
-      if (attempt !== voiceAttempt.current) return;
-      setVoiceError(error instanceof Error ? error.message : "Could not play speech.");
-      setPlaybackStatus("idle");
-    }
-  };
-
   useEffect(() => {
     let cancelled = false;
     setPlan(null);
@@ -169,34 +153,6 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
       setVoiceError(error instanceof Error ? error.message : "Could not play narration.");
       setPlaybackStatus("idle");
       setState((previous) => ({ ...previous, status: "paused" }));
-    }
-  };
-
-  const interruptDemo = async () => {
-    if (!plan || state.segment_id == null) return;
-    const seg = plan.segments[state.segment_index];
-    const delivered = seg.narration.slice(0, Math.min(60, seg.narration.length));
-    const offsetMs = 8000;
-    const interruptedState = captureInterrupt(state, offsetMs, delivered);
-    setState(interruptedState);
-    try {
-      const qa = await postLessonQA(lessonId, {
-        lesson_id: lessonId,
-        segment_id: state.segment_id,
-        question: "Why does water move?",
-        playback_ms: offsetMs,
-        narration_delivered: delivered,
-        qa_turns: [],
-      });
-      setTranscript(`${qa.answer}\n\n${qa.bridge ?? ""}`);
-      handlersForPage(seg.page).onViewerCommands(qa.viewer_commands);
-      setState(resumeAfterQA(plan, interruptedState, handlersForPage(seg.page)));
-    } catch {
-      const res = await fetch("/fixtures/sample-qa-response.json");
-      const qa = await res.json();
-      setTranscript(qa.answer);
-      handlersForPage(seg.page).onViewerCommands(qa.viewer_commands);
-      setState(resumeAfterQA(plan, interruptedState, handlersForPage(seg.page)));
     }
   };
 
@@ -322,53 +278,55 @@ export function LessonPlayer({ lessonId, onViewerCommands }: Props) {
 
   const answerBusy = qaStatus === "loading" || answerAudioStatus === "loading" || answerAudioStatus === "playing";
 
+  const stop = () => {
+    qaAttempt.current += 1;
+    voiceAttempt.current += 1;
+    cuesSuspended.current = true;
+    cueRef.current = null;
+    interruptionRef.current = null;
+    activeSegment.current = -1;
+    voicePlayer.current?.stop();
+    answerPlayer.current?.stop();
+    setMicrophoneSession((value) => value + 1);
+    setListening(false);
+    setQAStatus("idle");
+    setAnswerAudioStatus("idle");
+    setPlaybackStatus("idle");
+    setState((previous) => ({ ...previous, status: "idle", segment_id: null, interrupt: null }));
+  };
+
+  const status = listening ? "Listening" : answerBusy ? "Answering your question"
+    : playbackStatus === "loading" ? "Preparing audio"
+    : playbackStatus === "playing" ? "Lesson playing"
+    : playbackStatus === "complete" ? "Lesson complete"
+    : playbackStatus === "paused" ? "Ready to continue" : "Ready when you are";
+
   return (
-    <section
-      style={{
-        background: "var(--panel)",
-        borderRadius: 12,
-        padding: "1rem",
-      }}
-    >
-      <h2 style={{ margin: "0 0 0.5rem", fontSize: "1.1rem" }}>Voice (P3)</h2>
-      <p style={{ color: "var(--muted)", fontSize: "0.85rem" }}>
-        Status: {state.status} · segment {state.segment_index}
-        {state.interrupt
-          ? ` · resume @ ${state.interrupt.narration_offset_ms}ms`
-          : ""}
-      </p>
-      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-        <button type="button" onClick={testVoice} disabled={listening || answerBusy}>Test voice</button>
-        <button type="button" onClick={() => { emitDueCues(voicePlayer.current?.currentTimeMs ?? 0); cuesSuspended.current = true; voicePlayer.current?.pause(); setPlaybackStatus("paused"); setState((previous) => previous.segment_id ? { ...previous, status: "paused" } : previous); }} disabled={playbackStatus !== "playing" || answerBusy}>Pause</button>
-        <button type="button" onClick={() => void manualResume()} disabled={(!interruptionRef.current && playbackStatus !== "paused") || listening || answerBusy || playbackStatus === "playing" || playbackStatus === "loading"}>Resume</button>
-        <button type="button" onClick={() => { voiceAttempt.current += 1; cuesSuspended.current = true; cueRef.current = null; interruptionRef.current = null; voicePlayer.current?.stop(); setPlaybackStatus("idle"); setState((previous) => ({ ...previous, status: "idle" })); }} disabled={playbackStatus === "idle" || listening || answerBusy}>Stop</button>
-        <button type="button" onClick={() => void playSegment(0)} disabled={!plan || listening || answerBusy}>Play lesson</button>
-        <button type="button" onClick={() => void playSegment(state.segment_index + 1)} disabled={!plan || listening || answerBusy || !state.segment_id || state.segment_index >= plan.segments.length - 1}>Next</button>
-        <button type="button" onClick={interruptDemo} disabled={listening || answerBusy}>
-          Ask (demo)
+    <section className={styles.panel} aria-label="Voice tutor">
+      <header className={styles.header}>
+        <h2>Voice tutor</h2>
+        <span className={styles.status} role="status">{status}</span>
+      </header>
+      <div className={styles.controls}>
+        <button className={styles.primary} type="button"
+          onClick={() => void (interruptionRef.current || playbackStatus === "paused" ? manualResume() : playSegment(0))}
+          disabled={!plan || listening || answerBusy || playbackStatus === "playing" || playbackStatus === "loading"}>
+          <span aria-hidden="true">▶</span> Play lesson
         </button>
+        <button className={styles.button} type="button" onClick={stop}
+          disabled={playbackStatus === "idle" && !listening && !answerBusy && !interruptionRef.current}>
+          <span aria-hidden="true">■</span> Stop
+        </button>
+        <MicrophoneButton key={`${lessonId}-${microphoneSession}`}
+          disabled={!state.segment_id || answerBusy}
+          onBeforeStart={pauseForQuestion} onQuestion={(text) => void askQuestion(text)}
+          onListeningChange={setListening} />
       </div>
-      <MicrophoneButton key={lessonId} onBeforeStart={pauseForQuestion} onQuestion={(text) => void askQuestion(text)} onListeningChange={setListening} />
-      {question && <p><strong>Student question:</strong> {question}</p>}
-      {qaStatus === "loading" && <p role="status">Getting an answer…</p>}
-      {qaError && <p role="alert">{qaError}</p>}
-      {answer && <div><p><strong>Answer:</strong> {answer.answer}</p>{answer.cite_span_ids.length > 0 && <p>Sources: {answer.cite_span_ids.join(", ")}</p>}{answer.bridge && <p>{answer.bridge}</p>}</div>}
-      {answerAudioStatus === "loading" && <p role="status">Preparing spoken answer…</p>}
-      {answerAudioStatus === "playing" && <p role="status">Speaking answer…</p>}
-      {answerAudioError && <p role="alert">{answerAudioError}</p>}
-      {(answerAudioStatus === "loading" || answerAudioStatus === "playing") && <button type="button" onClick={() => { qaAttempt.current += 1; answerPlayer.current?.stop(); setAnswerAudioStatus("complete"); }}>Stop answer</button>}
-      {voiceError && <p role="alert">{voiceError}</p>}
-      <p>Playback: {playbackStatus}</p>
-      <p
-        style={{
-          marginTop: "1rem",
-          fontSize: "0.9rem",
-          lineHeight: 1.45,
-          minHeight: "4rem",
-        }}
-      >
-        {transcript || "Transcript will appear here."}
-      </p>
+      <p className={styles.hint}>Ask a question anytime during your lesson.</p>
+      {(qaError || answerAudioError || voiceError) && <p className={styles.error} role="alert">{qaError || answerAudioError || voiceError}</p>}
+      {question && <div className={styles.question}><span className={styles.label}>Your question</span><p>{question}</p></div>}
+      {answer && <div className={styles.answer}><span className={styles.label}>Tutor</span><p>{answer.answer}</p>{answer.bridge && <p className={styles.hint}>{answer.bridge}</p>}</div>}
+      {transcript && <div className={styles.transcript}><span className={styles.label}>Narration</span><p>{transcript}</p></div>}
     </section>
   );
 }

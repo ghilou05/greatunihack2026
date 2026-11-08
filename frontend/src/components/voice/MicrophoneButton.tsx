@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import styles from "./LessonPlayer.module.css";
 
 type SpeechResult = { isFinal: boolean; 0: { transcript: string } };
 type SpeechEvent = { resultIndex: number; results: ArrayLike<SpeechResult> };
@@ -27,17 +28,16 @@ function recognitionConstructor(): RecognitionConstructor | undefined {
 }
 
 type Props = {
+  disabled?: boolean;
   onBeforeStart: () => void;
   onQuestion: (question: string) => void;
   onListeningChange?: (listening: boolean) => void;
 };
 
-export function MicrophoneButton({ onBeforeStart, onQuestion, onListeningChange }: Props) {
+export function MicrophoneButton({ disabled, onBeforeStart, onQuestion, onListeningChange }: Props) {
   const [supported, setSupported] = useState<boolean | null>(null);
   const [status, setStatus] = useState<"idle" | "requesting" | "listening">("idle");
   const [error, setError] = useState<string | null>(null);
-  const [showTyping, setShowTyping] = useState(false);
-  const [typedQuestion, setTypedQuestion] = useState("");
   const recognition = useRef<Recognition | null>(null);
   const session = useRef(0);
 
@@ -64,7 +64,6 @@ export function MicrophoneButton({ onBeforeStart, onQuestion, onListeningChange 
     const Constructor = recognitionConstructor();
     if (!Constructor) {
       setSupported(false);
-      setShowTyping(true);
       return;
     }
     cancel();
@@ -97,16 +96,14 @@ export function MicrophoneButton({ onBeforeStart, onQuestion, onListeningChange 
       if (event.error === "aborted") return;
       setError(
         event.error === "not-allowed" || event.error === "service-not-allowed"
-          ? "Microphone permission was denied. Type your question below."
-          : `Speech recognition failed (${event.error}). Type your question below.`
+          ? "Microphone permission was denied. Check microphone access and try again."
+          : `Speech recognition failed (${event.error}). Check microphone access and try again.`
       );
-      setShowTyping(true);
       cancel();
     };
     current.onend = () => {
       if (id !== session.current) return;
-      setError("No speech was recognised. Try again or type your question below.");
-      setShowTyping(true);
+      setError("No speech was recognised. Push to talk to try again.");
       cancel();
     };
     setStatus("requesting");
@@ -114,39 +111,26 @@ export function MicrophoneButton({ onBeforeStart, onQuestion, onListeningChange 
     try {
       current.start();
     } catch {
-      setError("Could not start speech recognition. Type your question below.");
-      setShowTyping(true);
+      setError("Could not start speech recognition. Check microphone access and try again.");
       cancel();
     }
   };
 
   return (
-    <div>
-      {supported !== false && (
-        <button type="button" onClick={status === "idle" ? start : cancel}>
-          {status === "idle" ? "Ask with microphone" : "Cancel microphone"}
-        </button>
-      )}
-      {status !== "idle" && <span role="status"> {status === "requesting" ? "Waiting for microphone permission…" : "Listening…"}</span>}
-      {supported === false && <p role="status">Speech recognition is unavailable in this browser. Type your question below.</p>}
-      {error && <p role="alert">{error}</p>}
-      {(supported === false || showTyping) ? (
-        <form onSubmit={(event) => {
-          event.preventDefault();
-          const question = typedQuestion.trim();
-          if (!question) return;
-          cancel();
-          onBeforeStart();
-          onQuestion(question);
-          setTypedQuestion("");
-        }}>
-          <label htmlFor="typed-lesson-question">Your question</label>{" "}
-          <input id="typed-lesson-question" value={typedQuestion} onChange={(event) => setTypedQuestion(event.target.value)} />{" "}
-          <button type="submit" disabled={!typedQuestion.trim()}>Save question</button>
-        </form>
-      ) : (
-        <button type="button" onClick={() => setShowTyping(true)}>Type a question instead</button>
-      )}
+    <div className={styles.microphone}>
+      <button className={styles.button} type="button"
+        disabled={disabled || supported === false}
+        aria-pressed={status !== "idle"}
+        onClick={() => status === "idle" ? start() : recognition.current?.stop()}>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
+          <rect x="9" y="2" width="6" height="12" rx="3" />
+          <path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8" />
+        </svg>
+        {status === "idle" ? "Push to talk" : "Finish talking"}
+      </button>
+      {status !== "idle" && <p className={styles.hint} role="status">{status === "requesting" ? "Allow microphone access to speak." : "Listening… click to finish."}</p>}
+      {supported === false && <p className={styles.hint}>Speech recognition is unavailable in this browser. Try Chrome or Edge.</p>}
+      {error && <p className={styles.error} role="alert">{error}</p>}
     </div>
   );
 }

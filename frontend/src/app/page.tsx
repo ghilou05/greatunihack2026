@@ -126,7 +126,7 @@ export default function HomePage() {
             ) : (
               // LessonPlayer requires a lessonId, so it can't mount until there is one.
               <p className="lesson-empty">
-                Voice tutor (Person 3): starts once your lesson is ready.
+                Voice Tutor
               </p>
             )}
           </div>
